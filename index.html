@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>國立臺灣工藝研究發展中心</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Microsoft JhengHei","微軟正黑體",Arial,sans-serif;font-size:14px;color:#333;background:#f4f4f2;}
+a{text-decoration:none;color:inherit;}
+img{max-width:100%;display:block;}
+ul{list-style:none;}
+
+/* ─── VARIABLES ─── */
+:root{
+  --g1:#618137;
+  --g2:#4e6a28;
+  --g3:#7aa042;
+  --gbg:#eef4e5;
+  --border:#ddd;
+  --text-muted:#888;
+  --orange:#d4622a;
+  --red:#c0392b;
+  --blue:#1a6baa;
+}
+
+/* ─── SITE HEADER (white) ─── */
+.site-header{background:#fff;border-bottom:3px solid var(--g1);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+
+/* header top row: logo + util links */
+.hd-top{
+  max-width:1240px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;border-bottom:1px solid #e8e8e8;
+}
+.hd-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.hd-logo-icon{flex-shrink:0;}
+.hd-logo-text .cn{
+  font-size:22px;font-weight:bold;color:#222;
+  letter-spacing:.5px;line-height:1.2;
+}
+.hd-logo-text .en{
+  font-size:9.5px;color:#666;letter-spacing:1.5px;
+  margin-top:2px;text-transform:uppercase;
+}
+.hd-util{
+  display:flex;align-items:center;gap:0;
+  font-size:13px;
+}
+.hd-util a,.hd-util span{
+  color:#2d7a2d;padding:0 8px;white-space:nowrap;cursor:pointer;
+}
+.hd-util a:hover{text-decoration:underline;}
+.hd-util .sep{color:#bbb;padding:0;user-select:none;}
+.hd-util .qi{font-size:15px;color:#2d7a2d;}
+
+/* nav */
+.site-nav{background:#fff;}
+.nav-row{
+  max-width:1240px;margin:0 auto;
+  display:flex;align-items:stretch;justify-content:center;
+  flex-wrap:wrap;
+}
+
+/* nav item wrapper */
+.nav-li{position:relative;display:flex;align-items:center;}
+
+/* 圓角膠囊導覽項目（對應原始碼 border-radius:30px） */
+.nav-item{
+  display:flex;align-items:center;gap:4px;
+  padding:10px 18px 10px 11px;
+  font-size:16.5px;font-weight:500;letter-spacing:1px;
+  color:#1b1b1b;white-space:nowrap;
+  border-radius:30px;cursor:pointer;
+  transition:color .15s,background .15s;
+  user-select:none;
+}
+.nav-item:hover,.nav-item.active{
+  color:var(--g1);background:#f0f5e8;
+}
+.nav-li.open>.nav-item{
+  color:var(--g1);background:#f0f5e8;
+}
+.nav-arr{
+  font-size:11px;color:#aaa;
+  transition:transform .2s;display:inline-block;
+}
+.nav-li.open>.nav-item .nav-arr{
+  transform:rotate(180deg);color:var(--g1);
+}
+
+/* ─── DROPDOWN（click 開關）─── */
+.dropdown{
+  display:none;
+  position:absolute;top:calc(100% + 4px);left:0;
+  min-width:200px;
+  background:#fff;
+  box-shadow:0 8px 28px rgba(0,0,0,.16);
+  border-top:3px solid var(--g1);
+  border-radius:0 0 6px 6px;
+  z-index:1050;
+}
+.nav-li.open>.dropdown{display:block;}
+
+.dropdown a{
+  display:flex;align-items:center;
+  padding:10px 16px;font-size:15px;color:#333;
+  border-bottom:1px solid #f0f0f0;
+  border-left:3px solid transparent;
+  transition:background .12s,border-color .12s,color .12s;
+  white-space:nowrap;
+}
+.dropdown a:hover{
+  background:#f0f5e8;color:var(--g1);
+  border-left-color:var(--g1);
+}
+.dropdown a:last-child{border-bottom:none;}
+
+/* ─── HERO SLIDER ─── */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(120deg,#0e4a5a 0%,#155e4a 40%,#1a6e3a 70%,#2a7a2a 100%);
+  min-height:300px;
+}
+.hero-slider{display:flex;width:100%;min-height:300px;align-items:stretch;}
+.hero-slide{
+  min-width:100%;position:relative;display:flex;align-items:center;
+  padding:32px 0;
+}
+.hero-slide-inner{
+  max-width:1240px;margin:0 auto;width:100%;
+  display:flex;align-items:center;gap:32px;padding:0 32px;
+}
+/* decorative circles */
+.hero::after{
+  content:'';position:absolute;right:-100px;top:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.hero-main{flex:0 0 340px;}
+.hero-badge{
+  display:inline-block;background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.3);
+  padding:3px 12px;border-radius:20px;font-size:11px;color:#cef;
+  margin-bottom:10px;
+}
+.hero-cn{
+  font-size:58px;font-weight:900;color:#fff;line-height:1;
+  text-shadow:2px 4px 12px rgba(0,0,0,.3);
+}
+.hero-en{
+  font-size:20px;font-weight:700;color:#a8e6cf;
+  letter-spacing:4px;margin-top:4px;
+}
+.hero-sub{font-size:16px;color:#d4f7e8;margin-top:10px;}
+.hero-date{font-size:13px;color:#9ad4be;margin-top:6px;}
+.hero-venue{font-size:12px;color:#7abda8;margin-top:3px;}
+.hero-logos{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;}
+.hero-logos span{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  padding:3px 10px;border-radius:4px;font-size:11px;color:#cef;
+}
+
+.hero-news{display:flex;gap:16px;margin-left:auto;}
+.hero-newscard{
+  width:200px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);border-radius:10px;
+  padding:14px;flex-shrink:0;
+}
+.hero-newscard .hntag{
+  display:inline-block;font-size:10px;
+  background:rgba(255,140,0,.6);border-radius:10px;
+  padding:1px 8px;color:#fff;margin-bottom:6px;
+}
+.hero-newscard .hntag.blue{background:rgba(26,107,170,.7);}
+.hero-newscard h4{font-size:13px;color:#fff;line-height:1.6;font-weight:bold;}
+.hero-newscard .hndate{font-size:11px;color:rgba(255,255,255,.6);margin-top:6px;}
+
+/* slider nav */
+.hero-nav{
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;
+}
+.hero-nav span{
+  width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;
+}
+.hero-nav span.on{background:#fff;}
+.hero-arr{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);
+  border:none;cursor:pointer;color:#fff;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-arr.left{left:16px;}
+.hero-arr.right{right:16px;}
+.hero-arr:hover{background:rgba(255,255,255,.35);}
+.hero-count{
+  position:absolute;bottom:16px;left:24px;
+  font-size:13px;color:rgba(255,255,255,.7);
+}
+
+/* ─── CONTAINER ─── */
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px;}
+
+/* ─── SECTION HEADER ─── */
+.sec-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:2px solid var(--g1);padding-bottom:7px;margin-bottom:14px;
+}
+.sec-hd h2{
+  font-size:16px;font-weight:bold;color:var(--g1);
+  display:flex;align-items:center;gap:7px;
+}
+.sec-hd h2::before{
+  content:'';display:inline-block;width:4px;height:16px;
+  background:var(--g1);border-radius:2px;
+}
+.sec-hd .label-en{
+  font-size:11px;color:#aaa;margin-left:4px;font-weight:normal;letter-spacing:1px;
+}
+.sec-hd-right{display:flex;align-items:center;gap:6px;}
+.more-btn{
+  font-size:11px;color:var(--g1);border:1px solid var(--g1);
+  padding:2px 10px;border-radius:10px;cursor:pointer;white-space:nowrap;
+}
+.more-btn:hover{background:var(--g1);color:#fff;}
+
+/* ─── NEWS SECTION ─── */
+.news-section{background:#fff;border-radius:8px;padding:18px;margin:16px 0;}
+.news-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+.news-col{padding:0 16px;border-right:1px solid #eee;}
+.news-col:first-child{padding-left:0;}
+.news-col:last-child{border-right:none;}
+.news-col-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #eee;
+}
+.news-col-hd .cat{font-size:13px;font-weight:bold;color:var(--g1);}
+.news-item{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 0;border-bottom:1px dashed #ececec;
+}
+.news-item:last-child{border-bottom:none;}
+.ndate{font-size:11px;color:#999;white-space:nowrap;min-width:68px;padding-top:1px;}
+.ntag{
+  font-size:10px;white-space:nowrap;
+  padding:1px 6px;border-radius:8px;min-width:52px;text-align:center;
+  background:var(--gbg);color:var(--g1);flex-shrink:0;margin-top:1px;
+}
+.ntag.or{background:#fff3e0;color:var(--orange);}
+.ntag.rd{background:#fdecea;color:var(--red);}
+.ntag.bl{background:#e3f2fd;color:var(--blue);}
+.ntitle{font-size:13px;color:#333;line-height:1.55;flex:1;}
+.ntitle:hover{color:var(--g1);}
+
+/* ─── TABS ─── */
+.tab-row{display:flex;gap:2px;margin-bottom:12px;}
+.tab{
+  font-size:12px;padding:4px 12px;cursor:pointer;
+  border:1px solid #ddd;background:#f9f9f9;color:#666;border-radius:3px;
+}
+.tab.on{background:var(--g1);color:#fff;border-color:var(--g1);}
+
+/* ─── CARD BASE ─── */
+.card{
+  background:#fff;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden;
+  transition:box-shadow .2s,transform .2s;cursor:pointer;
+}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.1);transform:translateY(-2px);}
+.card-img{
+  width:100%;aspect-ratio:4/3;object-fit:cover;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;color:rgba(255,255,255,.7);
+}
+.card-body{padding:12px;}
+.ctag{
+  display:inline-block;font-size:10px;
+  padding:1px 7px;border-radius:8px;margin-bottom:5px;
+  background:var(--gbg);color:var(--g1);
+}
+.ctag.or{background:#fff3e0;color:var(--orange);}
+.ctag.bl{background:#e3f2fd;color:var(--blue);}
+.ctag.pp{background:#f3e5f5;color:#7b1fa2;}
+.card-title{font-size:13px;font-weight:bold;line-height:1.55;margin-bottom:5px;color:#222;}
+.card-date{font-size:11px;color:#999;}
+.card-loc{font-size:11px;color:#777;margin-top:2px;}
+
+/* ─── GRID HELPERS ─── */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+
+/* ─── SECTION WRAPPER ─── */
+.sec{background:#fff;border-radius:8px;padding:18px;margin:12px 0;}
+.sec.nobg{background:transparent;padding:0;margin:12px 0;}
+
+/* ─── EXHIBITION CARD ─── */
+.ecard .card-img{aspect-ratio:16/9;}
+.ecard .card-img.gi{background:linear-gradient(135deg,#1b5e20,#43a047);}
+.ecard .card-img.bi{background:linear-gradient(135deg,#0d47a1,#42a5f5);}
+.ecard .card-img.oi{background:linear-gradient(135deg,#bf360c,#ff8a65);}
+.ecard .card-img.vi{background:linear-gradient(135deg,#4a148c,#ce93d8);}
+
+/* ─── EVENT CARD ─── */
+.evcard .card-img{aspect-ratio:4/3;}
+.evcard .card-img.e1{background:linear-gradient(135deg,#e65100,#ff8f00);}
+.evcard .card-img.e2{background:linear-gradient(135deg,#880e4f,#f06292);}
+.evcard .card-img.e3{background:linear-gradient(135deg,#1a237e,#7986cb);}
+.evcard .card-img.e4{background:linear-gradient(135deg,#004d40,#4db6ac);}
+.evcard .card-body .etag{font-size:11px;color:var(--text-muted);}
+.evcard .card-body h4{font-size:13px;font-weight:bold;line-height:1.5;margin:3px 0;}
+.evcard .card-body .edate{font-size:11px;color:#999;}
+
+/* ─── MEDIA CARD ─── */
+.media-sec{margin:12px 0;}
+.media-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.mcard{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;cursor:pointer;transition:box-shadow .2s;}
+.mcard:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.mcard-thumb{
+  width:100%;aspect-ratio:16/9;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.mcard-thumb.m1{background:linear-gradient(135deg,#006064,#4dd0e1);}
+.mcard-thumb.m2{background:linear-gradient(135deg,#1a237e,#7986cb);}
+.mcard-thumb.m3{background:linear-gradient(135deg,#4a148c,#ba68c8);}
+.mcard-thumb.m4{background:linear-gradient(135deg,#bf360c,#ff8a65);}
+.play{
+  width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.9);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:var(--g1);
+}
+.mdur{
+  position:absolute;bottom:8px;right:8px;
+  background:rgba(0,0,0,.7);color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;
+}
+.mcard-body{padding:12px 14px;}
+.mcard-body h4{font-size:13px;font-weight:bold;line-height:1.5;color:#222;}
+.mcard-body p{font-size:11px;color:#999;margin-top:4px;}
+
+/* ─── PLATFORM SECTION ─── */
+.platform-sec{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;margin:12px 0;
+}
+.plat-left{background:#fff;border-radius:8px 0 0 8px;padding:18px;border:1px solid #e0e0e0;}
+.plat-right{background:#f9f9f9;border-radius:0 8px 8px 0;padding:18px;border:1px solid #e0e0e0;border-left:none;}
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.platcard{
+  border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;
+  cursor:pointer;transition:box-shadow .2s;background:#fff;
+}
+.platcard:hover{box-shadow:0 3px 12px rgba(0,0,0,.1);}
+.platcard-img{
+  height:80px;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:bold;color:#fff;text-align:center;padding:8px;line-height:1.4;
+}
+.platcard-img.pg{background:linear-gradient(135deg,#1b5e20,#66bb6a);}
+.platcard-img.pt{background:linear-gradient(135deg,#004d40,#26a69a);}
+.platcard-img.pb{background:linear-gradient(135deg,#3e2723,#8d6e63);}
+.platcard-img.pu{background:linear-gradient(135deg,#0d47a1,#64b5f6);}
+.platcard-name{font-size:11px;font-weight:bold;padding:6px 8px;color:#333;}
+
+/* craft feature */
+.craft-feat{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;
+}
+.craft-item{
+  border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;cursor:pointer;
+  background:#fff;transition:box-shadow .2s;
+}
+.craft-item:hover{box-shadow:0 3px 12px rgba(0,0,0,.1);}
+.craft-banner{
+  height:80px;display:flex;align-items:flex-end;padding:8px;
+  font-size:13px;font-weight:bold;color:#fff;
+  text-shadow:1px 1px 4px rgba(0,0,0,.5);
+}
+.craft-banner.cb1{background:linear-gradient(to bottom,rgba(0,100,50,.3),rgba(0,100,50,.9));}
+.craft-banner.cb2{background:linear-gradient(to bottom,rgba(150,60,0,.3),rgba(150,60,0,.9));}
+.craft-banner.cb3{background:linear-gradient(to bottom,rgba(20,80,160,.3),rgba(20,80,160,.9));}
+.craft-banner.cb4{background:linear-gradient(to bottom,rgba(80,0,80,.3),rgba(80,0,80,.9));}
+.craft-desc{font-size:11px;color:#666;padding:6px 8px;}
+
+/* ─── THEME SITES (NTRN) ─── */
+.ntrn-sec{background:#fff;border-radius:8px;padding:18px;margin:12px 0;}
+.ntrn-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px;}
+.ntrn-card{
+  border-radius:6px;overflow:hidden;border:1px solid #e0e0e0;cursor:pointer;
+  transition:box-shadow .2s,transform .2s;
+}
+.ntrn-card:hover{box-shadow:0 4px 14px rgba(0,0,0,.12);transform:translateY(-2px);}
+.ntrn-img{
+  aspect-ratio:5/3;display:flex;align-items:flex-end;padding:10px;
+  font-size:13px;font-weight:bold;color:#fff;
+  text-shadow:1px 1px 5px rgba(0,0,0,.5);
+}
+.ntrn-img.ni1{background:linear-gradient(to bottom right,#c62828,#e53935);}
+.ntrn-img.ni2{background:linear-gradient(to bottom right,#1565c0,#42a5f5);}
+.ntrn-img.ni3{background:linear-gradient(to bottom right,#2e7d32,#66bb6a);}
+.ntrn-img.ni4{background:linear-gradient(to bottom right,#e65100,#ff8f00);}
+.ntrn-label{
+  background:#fff;padding:8px 10px;
+  font-size:12px;color:#444;border-top:1px solid #eee;
+}
+
+/* ─── ENCYCLOPEDIA ─── */
+.ency-sec{background:#fff;border-radius:8px;padding:18px;margin:12px 0;}
+.ency-card{
+  display:flex;gap:18px;align-items:flex-start;
+  border:1px solid #e0e0e0;border-radius:8px;padding:16px;
+  background:#fafafa;cursor:pointer;
+}
+.ency-img{
+  width:180px;height:130px;border-radius:6px;flex-shrink:0;
+  background:linear-gradient(135deg,#f57f17,#ffca28);
+  display:flex;align-items:center;justify-content:center;font-size:48px;
+}
+.ency-txt h3{font-size:16px;font-weight:bold;color:var(--g1);margin-bottom:3px;}
+.ency-txt .esub{font-size:11px;color:#aaa;margin-bottom:8px;}
+.ency-txt p{font-size:13px;color:#555;line-height:1.8;}
+.ency-txt .emore{
+  display:inline-block;margin-top:10px;font-size:12px;color:var(--g1);
+  border:1px solid var(--g1);padding:3px 12px;border-radius:10px;
+}
+
+/* ─── CALENDAR ─── */
+.cal-sec{background:#fff;border-radius:8px;padding:18px;margin:12px 0;}
+.cal-wrap{display:grid;grid-template-columns:320px 1fr;gap:20px;}
+.cal-widget{border:1px solid #ddd;border-radius:8px;overflow:hidden;}
+.cal-head{
+  background:var(--g1);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;font-size:15px;font-weight:bold;
+}
+.cal-head button{
+  background:none;border:none;color:#fff;cursor:pointer;font-size:18px;
+  line-height:1;padding:0 4px;
+}
+.cal-head button:hover{color:#cef;}
+table.cal{width:100%;border-collapse:collapse;}
+table.cal th{
+  padding:7px 4px;text-align:center;font-size:11px;
+  color:#666;background:#f5f5f5;border-bottom:1px solid #ddd;
+}
+table.cal td{
+  padding:7px 4px;text-align:center;font-size:13px;
+  border-bottom:1px solid #f0f0f0;cursor:pointer;
+}
+table.cal td:hover{background:var(--gbg);}
+table.cal td.today{
+  background:var(--g1);color:#fff;font-weight:bold;border-radius:4px;
+}
+table.cal td.hasevent{color:var(--g1);font-weight:bold;}
+table.cal td.othermon{color:#ccc;}
+table.cal td.sun{color:#e53935;}
+table.cal td.sat{color:#1565c0;}
+
+.cal-events{padding:0;}
+.cal-ev-hd{font-size:13px;font-weight:bold;color:var(--g1);margin-bottom:10px;}
+.cal-ev-item{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:7px 0;border-bottom:1px dashed #eee;
+}
+.cal-ev-item:last-child{border-bottom:none;}
+.evdate{font-size:11px;color:#999;white-space:nowrap;width:32px;flex-shrink:0;padding-top:1px;}
+.evtitle{font-size:12px;color:#333;line-height:1.5;flex:1;}
+.evtag2{
+  font-size:10px;padding:1px 6px;border-radius:6px;flex-shrink:0;
+  background:var(--gbg);color:var(--g1);
+}
+
+/* ─── FOOTER ─── */
+.footer{background:#2b3e2c;border-top:4px solid var(--g1);padding:28px 0 0;}
+.footer-grid{
+  display:grid;
+  grid-template-columns:220px repeat(5,1fr);
+  gap:20px;padding-bottom:24px;
+  border-bottom:1px solid #3d5c3e;
+}
+.foot-brand .fname{font-size:14px;font-weight:bold;color:#fff;margin-bottom:4px;}
+.foot-brand .fen{font-size:10px;color:#88a888;margin-bottom:12px;}
+.foot-contact{font-size:11px;color:#88a888;line-height:2.1;}
+.foot-social{display:flex;gap:7px;margin-top:12px;}
+.foot-social a{
+  width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#aaa;
+}
+.foot-social a:hover{background:var(--g2);color:#fff;}
+.foot-col h4{font-size:12px;font-weight:bold;color:#fff;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #3d5c3e;}
+.foot-col ul li{margin-bottom:5px;}
+.foot-col ul li a{font-size:11px;color:#88a888;}
+.foot-col ul li a:hover{color:#a8d4a8;}
+.foot-branches{
+  display:flex;flex-wrap:wrap;gap:20px;
+  padding:20px 0 20px;border-bottom:1px solid #3d5c3e;margin-bottom:20px;
+}
+.foot-branch-item{flex:1;min-width:200px;}
+.foot-branch-item a{font-size:13px;font-weight:bold;color:#a8d4a8;}
+.foot-branch-item a:hover{color:#fff;}
+.foot-branch-item p{font-size:11px;color:#6a8a6a;margin-top:4px;line-height:1.7;}
+.foot-social-row{
+  display:flex;gap:10px;padding:16px 0;border-top:1px solid #3d5c3e;margin-top:4px;
+}
+.foot-social-row a{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#aaa;font-family:FontAwesome,sans-serif;
+}
+.foot-social-row a:hover{background:var(--g1);color:#fff;}
+.foot-bottom{
+  background:#1f2e20;
+  text-align:center;padding:16px;font-size:11px;color:#5a7a5a;line-height:2;
+}
+.foot-bottom a{color:#7aba7a;}
+.foot-bottom a{color:#7aba7a;}
+
+/* ─── UTILITY ─── */
+.mt8{margin-top:8px;}
+.mb0{margin-bottom:0;}
+.nowrap{white-space:nowrap;}
+
+/* ─── AI ASSISTANT NAV BUTTON ─── */
+.ai-nav-btn{
+  border:none;background:none;font-family:inherit;
+}
+
+/* ─── MODAL OVERLAY ─── */
+.ai-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.55);z-index:2000;
+  align-items:center;justify-content:center;
+}
+.ai-overlay.show{display:flex;}
+
+/* ─── BOT SELECT PANEL ─── */
+.bot-select-panel{
+  background:#fff;border-radius:12px;
+  width:560px;max-width:95vw;max-height:90vh;
+  overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.bot-select-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px 16px;border-bottom:1px solid #eee;
+}
+.bot-select-hd h3{font-size:18px;font-weight:bold;color:var(--g1);}
+.modal-close{
+  background:none;border:none;font-size:22px;
+  color:#999;cursor:pointer;line-height:1;padding:0 4px;
+}
+.modal-close:hover{color:#333;}
+.bot-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;padding:20px 24px 24px;
+}
+.bot-card{
+  border:2px solid #e0e0e0;border-radius:10px;
+  padding:18px 16px;cursor:pointer;text-align:center;
+  transition:border-color .15s,box-shadow .15s,transform .15s;
+}
+.bot-card:hover{
+  border-color:var(--g1);
+  box-shadow:0 4px 16px rgba(97,129,55,.2);
+  transform:translateY(-2px);
+}
+.bot-card-icon{font-size:36px;margin-bottom:8px;}
+.bot-card-name{font-size:15px;font-weight:bold;color:#222;margin-bottom:4px;}
+.bot-card-desc{font-size:12px;color:#777;line-height:1.5;}
+.bot-empty{padding:40px 24px;text-align:center;color:#999;font-size:14px;}
+
+/* ─── CHAT MODAL ─── */
+.chat-modal{
+  display:none;position:fixed;
+  bottom:24px;right:24px;
+  width:400px;height:560px;
+  background:#fff;border-radius:14px;
+  box-shadow:0 12px 48px rgba(0,0,0,.25);
+  z-index:2100;flex-direction:column;overflow:hidden;
+}
+.chat-modal.show{display:flex;}
+.chat-hd{
+  background:var(--g1);color:#fff;
+  padding:14px 16px;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.chat-hd-icon{font-size:22px;}
+.chat-hd-name{font-size:15px;font-weight:bold;flex:1;}
+.chat-close{
+  background:none;border:none;
+  color:rgba(255,255,255,.8);font-size:20px;
+  cursor:pointer;line-height:1;padding:0;
+}
+.chat-close:hover{color:#fff;}
+.chat-messages{
+  flex:1;overflow-y:auto;padding:14px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.chat-msg{display:flex;gap:8px;align-items:flex-end;}
+.chat-msg.user{flex-direction:row-reverse;}
+.chat-bubble{
+  max-width:78%;padding:10px 13px;
+  border-radius:16px;font-size:13px;
+  line-height:1.6;word-break:break-word;white-space:pre-wrap;
+}
+.chat-msg.user .chat-bubble{
+  background:var(--g1);color:#fff;border-bottom-right-radius:4px;
+}
+.chat-msg.bot .chat-bubble{
+  background:#f0f0f0;color:#333;border-bottom-left-radius:4px;
+}
+.chat-bubble img{max-width:100%;border-radius:8px;margin-bottom:6px;display:block;}
+.chat-typing{
+  display:inline-flex;gap:4px;padding:10px 13px;
+  background:#f0f0f0;border-radius:16px;border-bottom-left-radius:4px;
+}
+.chat-typing span{
+  width:7px;height:7px;border-radius:50%;background:#aaa;
+  animation:chatdot 1.2s infinite;
+}
+.chat-typing span:nth-child(2){animation-delay:.2s;}
+.chat-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes chatdot{
+  0%,80%,100%{transform:scale(.8);opacity:.5;}
+  40%{transform:scale(1.1);opacity:1;}
+}
+.chat-img-preview{
+  padding:0 14px 8px;display:flex;
+  align-items:center;gap:8px;flex-shrink:0;
+}
+.chat-img-preview img{
+  width:52px;height:52px;object-fit:cover;
+  border-radius:6px;border:2px solid #e0e0e0;
+}
+.chat-img-remove{
+  background:none;border:none;color:#999;
+  font-size:18px;cursor:pointer;line-height:1;
+}
+.chat-footer{
+  border-top:1px solid #eee;padding:10px 12px;
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+.chat-upload-btn{
+  background:none;border:none;font-size:20px;
+  cursor:pointer;color:#888;flex-shrink:0;padding:4px;
+}
+.chat-upload-btn:hover{color:var(--g1);}
+.chat-input{
+  flex:1;border:1px solid #ddd;border-radius:20px;
+  padding:8px 14px;font-size:13px;font-family:inherit;
+  resize:none;outline:none;min-height:36px;max-height:80px;overflow-y:auto;
+}
+.chat-input:focus{border-color:var(--g1);}
+.chat-send-btn{
+  background:var(--g1);border:none;color:#fff;
+  border-radius:50%;width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:16px;flex-shrink:0;
+}
+.chat-send-btn:hover{background:var(--g2);}
+.chat-send-btn:disabled{background:#ccc;cursor:default;}
+.chat-feedback{
+  display:flex;gap:6px;margin-top:5px;justify-content:flex-end;
+}
+.fb-btn{
+  background:none;border:1px solid #e0e0e0;border-radius:20px;
+  padding:3px 10px;font-size:14px;cursor:pointer;color:#bbb;
+  transition:all .15s;line-height:1.4;
+}
+.fb-btn:hover{border-color:#aaa;color:#888;}
+.fb-btn.liked{background:#eef4e5;border-color:#618137;color:#618137;}
+.fb-btn.disliked{background:#fdecea;border-color:#c0392b;color:#c0392b;}
+
+@media(max-width:1024px){
+  .news-cols,.g3,.g4,.media-grid,.platform-sec,.ntrn-grid,.cal-wrap{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr 1fr;}
+  .nav-menu>li>a{padding:0 9px;font-size:13px;}
+}
+@media(max-width:768px){
+  .nav-menu{display:none;}
+  .news-cols,.g3,.g4,.media-grid,.plat-grid,.craft-feat,.ntrn-grid,.g2{grid-template-columns:1fr;}
+  .platform-sec{grid-template-columns:1fr;}
+  .plat-right{border-radius:8px;border-left:1px solid #e0e0e0;margin-top:12px;}
+  .cal-wrap{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .hero-main{flex:unset;width:100%;}
+  .hero-news{display:none;}
+  .hero-cn{font-size:42px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ████ SITE HEADER ████ -->
+<header class="site-header">
+
+  <!-- top: logo + utility links -->
+  <div class="hd-top">
+    <a class="hd-logo" href="#">
+      <!-- NTCRI Logo (Y-shape) -->
+      <div class="hd-logo-icon">
+        <svg width="58" height="66" viewBox="0 0 58 66" xmlns="http://www.w3.org/2000/svg">
+          <!-- outer border frame -->
+          <rect x="1.5" y="1.5" width="55" height="63" fill="none" stroke="#2d7a2d" stroke-width="2.5"/>
+          <!-- top dot row -->
+          <circle cx="12" cy="9" r="1.8" fill="#2d7a2d"/>
+          <circle cx="20" cy="9" r="1.8" fill="#2d7a2d"/>
+          <circle cx="28" cy="9" r="1.8" fill="#2d7a2d"/>
+          <!-- Y shape: two arms going up, stem going down -->
+          <path d="M 10 20 Q 10 20 29 42 Q 48 20 48 20" fill="none" stroke="#2d7a2d" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="29" y1="42" x2="29" y2="60" stroke="#2d7a2d" stroke-width="5.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="hd-logo-text">
+        <div class="cn">國立台灣工藝研究發展中心</div>
+        <div class="en">National Taiwan Craft Research and Development Institute</div>
+      </div>
+    </a>
+
+    <!-- utility links top-right -->
+    <div class="hd-util">
+      <a href="#">回首頁</a>
+      <span class="sep">|</span>
+      <a href="#">網站導覽</a>
+      <span class="sep">|</span>
+      <a href="#">友善措施專區</a>
+      <span class="sep">|</span>
+      <a href="#">會員專區</a>
+      <span class="sep">|</span>
+      <span class="qi">&#128269;</span>
+      <a href="#">EN</a>
+    </div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="nav-row">
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/policy">關於我們 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/policy">政策理念</a>
+          <a href="/home/zh-tw/history">緣起沿革</a>
+          <a href="/home/zh-tw/programs">臺灣工藝政策白皮書</a>
+          <a href="/home/zh-tw/Chief">首長</a>
+          <a href="/home/zh-tw/ASD">歷任首長</a>
+          <a href="/home/zh-tw/team">組織團隊</a>
+          <a href="/home/zh-tw/informationlist">政府公開資訊</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/NTCRI">參觀資訊 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/NTCRI">臺灣工藝文化園區(草屯)</a>
+          <a href="/home/zh-tw/taipei">臺北當代工藝設計分館</a>
+          <a href="/home/zh-tw/Ingkokhu">鶯歌多媒材研發分館</a>
+          <a href="/home/zh-tw/Miaoli">苗栗工藝產業研發分館</a>
+          <a href="https://event.culture.tw/NTCRI/portal/Tour/J5401MAction" target="_blank">預約團體導覽</a>
+          <a href="/home/zh-tw/traffic">交通資訊</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/news">公告訊息 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/news">最新消息</a>
+          <a href="/home/zh-tw/morenews">工藝新聞</a>
+          <a href="/home/zh-tw/otherActivity">轉發外部訊息</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/activitysoonlist">活動 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/activitysoonlist">最新活動</a>
+          <a href="/home/zh-tw/activityreview">活動回顧</a>
+          <a href="/home/zh-tw/craftyear">每月園區活動DM</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/exhibition">展覽 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/exhibition">實體展覽</a>
+          <a href="/home/zh-tw/review">展覽回顧</a>
+          <a href="/home/zh-tw/activity">線上展覽</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="https://collections.culture.tw/ntcri_collectionsweb" target="_blank">典藏 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="https://collections.culture.tw/ntcri_collectionsweb" target="_blank">典藏查詢系統</a>
+          <a href="https://muguide.world/zh-TW/ntcri" target="_blank">藏品3D展示平台</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/magazine">出版與圖書 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/magazine">工藝期刊</a>
+          <a href="/home/zh-tw/bookS">工藝出版品</a>
+          <a href="/home/zh-tw/sustainability">臺灣工藝永續發展自願檢視報告</a>
+          <a href="https://ntcrilib.blogspot.com" target="_blank">圖書查詢系統</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="#">主題網站 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="#">臺灣工藝</a>
+          <a href="#">臺灣工藝選品站</a>
+          <a href="#">臺北工藝館</a>
+          <a href="#">工藝生活館</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="https://twc.ntcri.gov.tw" target="_blank">主題網站 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="https://twc.ntcri.gov.tw" target="_blank">工藝型錄平台</a>
+          <a href="https://craftsplatform.ntcri.gov.tw/" target="_blank">臺灣工藝學習平台</a>
+          <a href="https://cci.ntcri.gov.tw" target="_blank">國家工藝檢測修護知識網</a>
+          <a href="https://imedia.culture.tw/channel/ntcri/zh_tw/index" target="_blank">iMedia影音平台</a>
+          <a href="/home/zh-tw/artists">臺灣工藝之家</a>
+          <a href="/home/zh-tw/suscraftsmap">工藝地圖(GIS)</a>
+          <a href="/home/zh-tw/encyclopedia">工藝小百科</a>
+          <a href="https://kanggesu.ntcri.gov.tw" target="_blank">台語工藝詞庫</a>
+          <a href="https://tiam.ntcri.gov.tw/home/zh-tw" target="_blank">寺廟就是一座工藝博物館</a>
+          <a href="https://slohas.ntcri.gov.tw/" target="_blank">臺灣工藝季(活動官網)</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw">工藝競獎 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="https://tca.ntcri.gov.tw/" target="_blank">國內競賽</a>
+          <a href="/home/zh-tw/competition">國外競賽</a>
+          <a href="/home/zh-tw/certification">其他競賽</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw">便民服務 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/space">申請服務</a>
+          <a href="/home/zh-tw/volunteer">志工服務</a>
+          <a href="/home/zh-tw/lost">遺失物招領</a>
+          <a href="/home/zh-tw/consumer">消費者服務專區</a>
+          <a href="/home/zh-tw/links">相關連結</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <a class="nav-item" href="/home/zh-tw/equalrights">文化平權 <span class="nav-arr">∨</span></a>
+        <div class="dropdown">
+          <a href="/home/zh-tw/egalitarianism">文化平權專區介紹</a>
+          <a href="/home/zh-tw/egalitarianism0">友善平權執行成果</a>
+          <a href="/home/zh-tw/genderequality">性別平等專區</a>
+          <a href="/home/zh-tw/friendlylinks2">友善連結</a>
+        </div>
+      </div>
+
+      <div class="nav-li">
+        <button class="nav-item ai-nav-btn" id="aiNavBtn">🤖 工藝詢問AI小幫手</button>
+      </div>
+
+    </div>
+  </nav>
+
+</header>
+
+<!-- ████ HERO BANNER ████ -->
+<section class="hero">
+  <button class="hero-arr left">&#10094;</button>
+  <div class="hero-slider">
+    <div class="hero-slide">
+      <div class="hero-slide-inner">
+        <div class="hero-main">
+          <div class="hero-badge">CRAFT ISLAND 工藝島特展</div>
+          <div class="hero-cn">漫工<br>活藝</div>
+          <div class="hero-en">CRAFT FLOW</div>
+          <div class="hero-sub">蝦米盃海底工藝展</div>
+          <div class="hero-date">115.5.29 – 12.28</div>
+          <div class="hero-venue">國立臺灣工藝研究發展中心 &nbsp;工藝資訊館四樓一樓</div>
+          <div class="hero-logos">
+            <span>文化部</span>
+            <span>臺灣工藝中心</span>
+            <span>NTCRI</span>
+          </div>
+        </div>
+        <div class="hero-news">
+          <div class="hero-newscard">
+            <div class="hntag">最新消息</div>
+            <h4>【2026新任工藝師】數位媒體藝術人才 徐曉菁 事蹟 (榮譽榜)</h4>
+            <div class="hndate">2026.06.12</div>
+          </div>
+          <div class="hero-newscard">
+            <div class="hntag blue">展覽活動</div>
+            <h4>「Time After Time」時光系列 115年6月至8月活動指南</h4>
+            <div class="hndate">2026.06.10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="hero-arr right">&#10095;</button>
+  <div class="hero-count">11 / 24</div>
+  <div class="hero-nav">
+    <span class="on"></span><span></span><span></span><span></span>
+  </div>
+</section>
+
+<!-- ████ MAIN CONTENT ████ -->
+<div class="wrap">
+
+  <!-- ── NEWS ── -->
+  <div class="sec" style="margin-top:16px;">
+    <div class="sec-hd">
+      <h2>最新消息 <span class="label-en">NEWS</span></h2>
+      <div class="sec-hd-right">
+        <div class="tab-row" style="margin-bottom:0;">
+          <span class="tab on">工藝新知</span>
+          <span class="tab">最新消息</span>
+        </div>
+        <a href="#" class="more-btn">更多 &rsaquo;</a>
+      </div>
+    </div>
+    <div class="news-cols">
+      <!-- Col 1 -->
+      <div class="news-col">
+        <div class="news-col-hd">
+          <span class="cat">人事 &amp; 綜合</span>
+          <a href="#" class="more-btn" style="font-size:10px;padding:1px 8px;">更多</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.12</span>
+          <span class="ntag">人事消息</span>
+          <a href="#" class="ntitle">【2026新任工藝師】數位媒體藝術人才 徐曉菁 事蹟 (榮譽榜)</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.10</span>
+          <span class="ntag or">活動訊息</span>
+          <a href="#" class="ntitle">2026新豐工藝文創 Green Craft計畫徵件活動宣告成果</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.08</span>
+          <span class="ntag">展覽消息</span>
+          <a href="#" class="ntitle">「Art」工藝集市—市集、型態展、體驗活動 全國總決賽暨成果展</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.05</span>
+          <span class="ntag rd">採購公告</span>
+          <a href="#" class="ntitle">「海米 × 工藝米」多個海洋節、個別展藝術工藝家 舊傳統時代記者採購公告招標作品</a>
+        </div>
+      </div>
+      <!-- Col 2 -->
+      <div class="news-col">
+        <div class="news-col-hd">
+          <span class="cat">展覽 &amp; 活動</span>
+          <a href="#" class="more-btn" style="font-size:10px;padding:1px 8px;">更多</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.12</span>
+          <span class="ntag">展覽消息</span>
+          <a href="#" class="ntitle">2026年度新豐工藝大展 徵集計畫暨申請說明</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.28</span>
+          <span class="ntag or">活動訊息</span>
+          <a href="#" class="ntitle">第115屆工藝學習學習推廣工藝獎 新竹工藝展</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.22</span>
+          <span class="ntag">展覽消息</span>
+          <a href="#" class="ntitle">米木・工藝米術館新年度重要展覽推薦優先參觀指南</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.15</span>
+          <span class="ntag bl">競賽公告</span>
+          <a href="#" class="ntitle">2026臺灣工藝設計競賽 得獎名單正式公告</a>
+        </div>
+      </div>
+      <!-- Col 3 -->
+      <div class="news-col">
+        <div class="news-col-hd">
+          <span class="cat">研究 &amp; 採購</span>
+          <a href="#" class="more-btn" style="font-size:10px;padding:1px 8px;">更多</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.06.01</span>
+          <span class="ntag rd">採購公告</span>
+          <a href="#" class="ntitle">114年度工藝研究發展計畫 成果報告書印製採購公告</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.25</span>
+          <span class="ntag">工藝新知</span>
+          <a href="#" class="ntitle">臺灣傳統竹編技法數位典藏計畫 研究成果發表</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.20</span>
+          <span class="ntag rd">採購公告</span>
+          <a href="#" class="ntitle">115年度工藝體驗教具設計製作案 招標公告</a>
+        </div>
+        <div class="news-item">
+          <span class="ndate">2026.05.10</span>
+          <span class="ntag or">活動訊息</span>
+          <a href="#" class="ntitle">工藝師駐村計畫 第二梯次徵選結果公告</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXHIBITIONS & COMPETITIONS ── -->
+  <div class="sec">
+    <div class="sec-hd">
+      <h2>展覽與競賽 <span class="label-en">EXHIBITIONS &amp; COMPETITIONS</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="g3">
+      <div class="card ecard">
+        <div class="card-img gi">🏺</div>
+        <div class="card-body">
+          <span class="ctag">展覽</span>
+          <div class="card-title">2026–2027 工藝癡燒集（不只是工藝）</div>
+          <div class="card-date">2026/01/01 – 2027/01/05</div>
+          <div class="card-loc">📍 國立臺灣工藝研究發展中心</div>
+        </div>
+      </div>
+      <div class="card ecard">
+        <div class="card-img bi">🌊</div>
+        <div class="card-body">
+          <span class="ctag">展覽</span>
+          <div class="card-title">工藝未來：社在地海岸設計思考—漫工藝活</div>
+          <div class="card-date">2026/04/20 – 2027/01/31</div>
+          <div class="card-loc">📍 全國各地巡迴</div>
+        </div>
+      </div>
+      <div class="card ecard">
+        <div class="card-img gi" style="background:linear-gradient(135deg,#004d40,#80cbc4);">🌿</div>
+        <div class="card-body">
+          <span class="ctag">展覽</span>
+          <div class="card-title">工藝島－2026兒童水績工藝特展（兒童友善）</div>
+          <div class="card-date">2026/05/18 – 2026/09/13</div>
+          <div class="card-loc">📍 南投本館</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EVENTS ── -->
+  <div class="sec">
+    <div class="sec-hd">
+      <h2>近期活動 <span class="label-en">EVENTS NOTICES</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="g4">
+      <div class="card evcard">
+        <div class="card-img e1">🎪</div>
+        <div class="card-body">
+          <div class="etag">工藝推廣</div>
+          <h4>工藝超人大冒險</h4>
+          <div class="edate">2026/05/01 – 2026/07/13</div>
+        </div>
+      </div>
+      <div class="card evcard">
+        <div class="card-img e2">🎭</div>
+        <div class="card-body">
+          <div class="etag">工藝教育</div>
+          <h4>6.5 立藝節</h4>
+          <div class="edate">2026/06/05 – 2026/06/13</div>
+        </div>
+      </div>
+      <div class="card evcard">
+        <div class="card-img e3">🏛️</div>
+        <div class="card-body">
+          <div class="etag">展覽活動</div>
+          <h4>「115年工藝學習節學活」教師工藝培訓</h4>
+          <div class="edate">2026/06/01 – 2026/09/13</div>
+        </div>
+      </div>
+      <div class="card evcard">
+        <div class="card-img e4">🌊</div>
+        <div class="card-body">
+          <div class="etag">親子活動</div>
+          <h4>米米・組織物給烘培力工藝</h4>
+          <div class="edate">2026/06/10 – 2026/06/19</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MULTIMEDIA ── -->
+  <div class="sec media-sec">
+    <div class="sec-hd">
+      <h2>多媒體影音 <span class="label-en">MEDIA</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="media-grid">
+      <div class="mcard">
+        <div class="mcard-thumb m1">
+          <div class="play">&#9654;</div>
+          <div class="mdur">08:32</div>
+        </div>
+        <div class="mcard-body">
+          <h4>工藝島－2026兒童水績工藝特展 精彩開幕回顧</h4>
+          <p>CRAFT ISLAND &nbsp;·&nbsp; 2026/05/18</p>
+        </div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-thumb m2">
+          <div class="play">&#9654;</div>
+          <div class="mdur">05:14</div>
+        </div>
+        <div class="mcard-body">
+          <h4>工藝島－2026兒童永續工藝特展｜兒童友善親子導覽影片</h4>
+          <p>多媒體影音 &nbsp;·&nbsp; 2026/05/20</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PLATFORM + CRAFT FEATURE ── -->
+  <div class="platform-sec">
+    <div class="plat-left">
+      <div class="sec-hd" style="margin-bottom:10px;">
+        <h2>經濟體驗平台</h2>
+        <a href="#" class="more-btn">更多 &rsaquo;</a>
+      </div>
+      <p style="font-size:12px;color:#666;line-height:1.7;">
+        整合臺灣工藝推廣資源，提供工藝師培育、
+        品牌推廣及線上購物等多元服務平台。
+      </p>
+      <div class="plat-grid">
+        <div class="platcard">
+          <div class="platcard-img pg">國家工藝<br>坊所訓練規劃</div>
+          <div class="platcard-name">國家工藝坊所訓練規劃</div>
+        </div>
+        <div class="platcard">
+          <div class="platcard-img pt">臺灣工藝<br>學習平台</div>
+          <div class="platcard-name">臺灣工藝學習平台</div>
+        </div>
+        <div class="platcard">
+          <div class="platcard-img pb">臺灣工藝<br>品牌平台</div>
+          <div class="platcard-name">臺灣工藝品牌平台</div>
+        </div>
+        <div class="platcard">
+          <div class="platcard-img pu">工藝電商<br>購物平台</div>
+          <div class="platcard-name">工藝電商購物平台</div>
+        </div>
+      </div>
+    </div>
+    <div class="plat-right">
+      <div class="sec-hd" style="margin-bottom:10px;">
+        <h2>創作工藝包特集</h2>
+        <a href="#" class="more-btn">更多 &rsaquo;</a>
+      </div>
+      <p style="font-size:12px;color:#666;line-height:1.7;">
+        精心設計的工藝體驗包，讓您在家即可學習
+        傳統臺灣工藝技術，豐富生活美感體驗。
+      </p>
+      <div class="craft-feat">
+        <div class="craft-item">
+          <div class="craft-banner cb1">竹編工藝包</div>
+          <div class="craft-desc">傳統竹編技法入門套組</div>
+        </div>
+        <div class="craft-item">
+          <div class="craft-banner cb2">陶藝體驗組</div>
+          <div class="craft-desc">手捏陶 DIY 全套材料</div>
+        </div>
+        <div class="craft-item">
+          <div class="craft-banner cb3">漆藝入門包</div>
+          <div class="craft-desc">天然生漆基礎技法組</div>
+        </div>
+        <div class="craft-item">
+          <div class="craft-banner cb4">刺繡藝術包</div>
+          <div class="craft-desc">傳統刺繡圖樣練習組</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── THEME SITES (NTRN ONLINE) ── -->
+  <div class="ntrn-sec">
+    <div class="sec-hd">
+      <h2>生題網站 <span class="label-en">NTRN ONLINE</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="ntrn-grid">
+      <div class="ntrn-card">
+        <div class="ntrn-img ni1">臺灣工藝主題站</div>
+        <div class="ntrn-label">臺灣工藝資訊總入口</div>
+      </div>
+      <div class="ntrn-card">
+        <div class="ntrn-img ni2">臺灣工藝選品站</div>
+        <div class="ntrn-label">精選工藝品購買平台</div>
+      </div>
+      <div class="ntrn-card">
+        <div class="ntrn-img ni3">臺北工藝館</div>
+        <div class="ntrn-label">臺北工藝展示與體驗</div>
+      </div>
+      <div class="ntrn-card">
+        <div class="ntrn-img ni4">故宮南院工藝</div>
+        <div class="ntrn-label">亞洲藝術文化展示</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ENCYCLOPEDIA ── -->
+  <div class="ency-sec">
+    <div class="sec-hd">
+      <h2>工藝小百科 <span class="label-en">KNOWLEDGE</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="ency-card">
+      <div class="ency-img">🟡</div>
+      <div class="ency-txt">
+        <h3>馬賽克鑲嵌畫（Mosaics）</h3>
+        <div class="esub">KNOWLEDGE &nbsp;·&nbsp; 工藝百科 &nbsp;·&nbsp; 2026/06/01</div>
+        <p>
+          馬賽克（Mosaic），是由細小石塊、彩色玻璃或其他材料拼成的圖案，常用於裝飾地板、牆壁或穹頂。在西方，馬賽克藝術源自古希臘，後廣泛應用於拜占庭教堂裝飾。臺灣傳統建築中亦常見彩色磁磚拼貼藝術，形成獨特在地工藝風格，是東西文化交融的最佳典範。
+        </p>
+        <a href="#" class="emore">閱讀更多 &rsaquo;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALENDAR ── -->
+  <div class="cal-sec">
+    <div class="sec-hd">
+      <h2>行事曆 <span class="label-en">CALENDAR</span></h2>
+      <a href="#" class="more-btn">更多 &rsaquo;</a>
+    </div>
+    <div class="cal-wrap">
+      <div class="cal-widget">
+        <div class="cal-head">
+          <button>&#8249;</button>
+          <span>2026 年 6 月</span>
+          <button>&#8250;</button>
+        </div>
+        <table class="cal">
+          <thead>
+            <tr>
+              <th class="sun">日</th><th>一</th><th>二</th><th>三</th>
+              <th>四</th><th>五</th><th class="sat">六</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="othermon sun">1</td>
+              <td class="othermon">2</td>
+              <td class="othermon hasevent">3</td>
+              <td class="othermon">4</td>
+              <td class="hasevent">5</td>
+              <td>6</td>
+              <td class="sat">7</td>
+            </tr>
+            <tr>
+              <td class="sun">8</td>
+              <td>9</td>
+              <td class="hasevent">10</td>
+              <td>11</td>
+              <td class="hasevent">12</td>
+              <td>13</td>
+              <td class="sat">14</td>
+            </tr>
+            <tr>
+              <td class="sun">15</td>
+              <td>16</td>
+              <td>17</td>
+              <td>18</td>
+              <td class="today">19</td>
+              <td class="hasevent">20</td>
+              <td class="sat">21</td>
+            </tr>
+            <tr>
+              <td class="sun">22</td>
+              <td class="hasevent">23</td>
+              <td>24</td>
+              <td class="hasevent">25</td>
+              <td>26</td>
+              <td>27</td>
+              <td class="sat">28</td>
+            </tr>
+            <tr>
+              <td class="sun">29</td>
+              <td>30</td>
+              <td class="othermon">1</td>
+              <td class="othermon">2</td>
+              <td class="othermon">3</td>
+              <td class="othermon">4</td>
+              <td class="othermon sat">5</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="cal-ev-hd">近期活動</div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/5</span>
+          <span class="evtag2">活動</span>
+          <span class="evtitle">6.5 立藝節－工藝學習節 開幕典禮</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/12</span>
+          <span class="evtag2">展覽</span>
+          <span class="evtitle">電子工藝報導學生 NTU ART 成果展</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/15</span>
+          <span class="evtag2">活動</span>
+          <span class="evtitle">工藝超人大冒險 第三場工作坊 (南投本館)</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/20</span>
+          <span class="evtag2">展覽</span>
+          <span class="evtitle">2026 工藝大展 展前記者發表會</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/23</span>
+          <span class="evtag2">活動</span>
+          <span class="evtitle">臺灣工藝品牌平台 新功能發表會</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/25</span>
+          <span class="evtag2">公告</span>
+          <span class="evtitle">漆藝工藝師認證考試 報名截止日</span>
+        </div>
+        <div class="cal-ev-item">
+          <span class="evdate">6/30</span>
+          <span class="evtag2">截止</span>
+          <span class="evtitle">2026臺灣工藝設計競賽 作品送件截止</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ████ FOOTER ████ -->
+<footer class="footer">
+  <div class="wrap">
+    <!-- 各館地址 -->
+    <div class="foot-branches">
+      <div class="foot-branch-item">
+        <a href="/home/zh-tw/NTCRI" target="_blank">臺灣工藝文化園區</a>
+        <p>542020 南投縣草屯鎮中正路573號<br>TEL:(049)233-4141　FAX:(049)235-6613</p>
+      </div>
+      <div class="foot-branch-item">
+        <a href="/home/zh-tw/taipei" target="_blank">臺北當代工藝設計分館</a>
+        <p>100052 臺北市中正區南海路41號<br>TEL:(02)2388-7066　FAX:(02)2388-7056</p>
+      </div>
+      <div class="foot-branch-item">
+        <a href="/home/zh-tw/Ingkokhu" target="_blank">鶯歌多媒材研發分館</a>
+        <p>239018 新北市鶯歌區鳳鳴路160號<br>TEL:(02)2670-5308　FAX:(02)2670-5792</p>
+      </div>
+      <div class="foot-branch-item">
+        <a href="/home/zh-tw/Miaoli" target="_blank">苗栗工藝產業研發分館</a>
+        <p>360019 苗栗縣苗栗市水源里水流娘巷11鄰8-2號<br>TEL:(037)222-693　FAX:(037)232-942</p>
+      </div>
+    </div>
+
+    <!-- 大型連結清單 (sitemap) -->
+    <div class="footer-grid">
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw/policy">關於我們</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/policy">政策理念</a></li>
+          <li><a href="/home/zh-tw/history">緣起沿革</a></li>
+          <li><a href="/home/zh-tw/programs">臺灣工藝政策白皮書</a></li>
+          <li><a href="/home/zh-tw/Chief">首長</a></li>
+          <li><a href="/home/zh-tw/ASD">歷任首長</a></li>
+          <li><a href="/home/zh-tw/team">組織團隊</a></li>
+          <li><a href="/home/zh-tw/informationlist">政府公開資訊</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw/NTCRI">參觀資訊</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/NTCRI">臺灣工藝文化園區(草屯)</a></li>
+          <li><a href="/home/zh-tw/taipei">臺北當代工藝設計分館</a></li>
+          <li><a href="/home/zh-tw/Ingkokhu">鶯歌多媒材研發分館</a></li>
+          <li><a href="/home/zh-tw/Miaoli">苗栗工藝產業研發分館</a></li>
+          <li><a href="https://event.culture.tw/NTCRI/portal/Tour/J5401MAction" target="_blank">預約團體導覽</a></li>
+          <li><a href="/home/zh-tw/traffic">交通資訊</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw/news">公告訊息</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/news">最新消息</a></li>
+          <li><a href="/home/zh-tw/morenews">工藝新聞</a></li>
+          <li><a href="/home/zh-tw/otherActivity">轉發外部訊息</a></li>
+        </ul>
+        <h4 style="margin-top:12px;"><a href="/home/zh-tw/activitysoonlist">活動</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/activitysoonlist">最新活動</a></li>
+          <li><a href="/home/zh-tw/activityreview">活動回顧</a></li>
+          <li><a href="/home/zh-tw/craftyear">每月園區活動DM</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw/exhibition">展覽</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/exhibition">實體展覽</a></li>
+          <li><a href="/home/zh-tw/review">展覽回顧</a></li>
+          <li><a href="/home/zh-tw/activity">線上展覽</a></li>
+        </ul>
+        <h4 style="margin-top:12px;"><a href="https://collections.culture.tw/ntcri_collectionsweb" target="_blank">典藏</a></h4>
+        <ul>
+          <li><a href="https://collections.culture.tw/ntcri_collectionsweb" target="_blank">典藏查詢系統</a></li>
+          <li><a href="https://muguide.world/zh-TW/ntcri" target="_blank">藏品3D展示平台</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw/magazine">出版與圖書</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/magazine">工藝期刊</a></li>
+          <li><a href="/home/zh-tw/bookS">工藝出版品</a></li>
+          <li><a href="/home/zh-tw/sustainability">工藝永續發展報告</a></li>
+          <li><a href="https://ntcrilib.blogspot.com" target="_blank">圖書查詢系統</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4><a href="/home/zh-tw">工藝競獎</a></h4>
+        <ul>
+          <li><a href="https://tca.ntcri.gov.tw/" target="_blank">國內競賽</a></li>
+          <li><a href="/home/zh-tw/competition">國外競賽</a></li>
+          <li><a href="/home/zh-tw/certification">其他競賽</a></li>
+        </ul>
+        <h4 style="margin-top:12px;"><a href="/home/zh-tw">便民服務</a></h4>
+        <ul>
+          <li><a href="/home/zh-tw/space">申請服務</a></li>
+          <li><a href="/home/zh-tw/volunteer">志工服務</a></li>
+          <li><a href="/home/zh-tw/lost">遺失物招領</a></li>
+          <li><a href="/home/zh-tw/consumer">消費者服務專區</a></li>
+          <li><a href="/home/zh-tw/links">相關連結</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 社群媒體 -->
+    <div class="foot-social-row">
+      <a href="https://www.facebook.com/ntcrintcri" target="_blank" title="Facebook">&#xf09a;</a>
+      <a href="https://www.youtube.com/channel/UCZPiM8fdw_Ijb2W4ffQV_0g" target="_blank" title="YouTube">&#xf167;</a>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <a href="/home/zh-tw/footer/11409" target="_blank">著作權聲明</a> ｜
+    <a href="/home/zh-tw/footer/11410" target="_blank">隱私權宣告</a> ｜
+    <a href="/home/zh-tw/footer/6158" target="_blank">資訊安全</a> ｜
+    <a href="/home/zh-tw/footer/6156" target="_blank">網站資料開放宣告</a> ｜
+    <a href="/home/zh-tw/contectus" target="_blank">聯絡我們</a>
+    <br>
+    地址：542020 南投縣草屯鎮中正路573號 ｜ 電話：(049)233-4141 　傳真：(049)235-6613<br>
+    統一編號：61218607 ｜ 園區開放時間：周二至周日 AM9:00-PM5:00（周一休館，國定假日除外）<br>
+    最佳瀏覽狀態：螢幕解析度 1280x720 　Copyright &copy; 國立臺灣工藝研究發展中心版權所有
+    <a href="#">隱私權政策</a> &nbsp;|&nbsp;
+    <a href="#">資訊安全政策</a> &nbsp;|&nbsp;
+    <a href="#">網站導覽</a> &nbsp;|&nbsp;
+    最佳瀏覽解析度 1366×768 &nbsp;|&nbsp; 建議使用 Chrome / Firefox / Edge 瀏覽器
+  </div>
+</footer>
+
+
+<!-- ████ BOT SELECT MODAL ████ -->
+<div class="ai-overlay" id="botSelectOverlay">
+  <div class="bot-select-panel">
+    <div class="bot-select-hd">
+      <h3>🤖 請選擇詢問機器人</h3>
+      <button class="modal-close" id="botSelectClose">✕</button>
+    </div>
+    <div id="botGrid" class="bot-grid"></div>
+  </div>
+</div>
+
+<!-- ████ CHAT MODAL ████ -->
+<div class="chat-modal" id="chatModal">
+  <div class="chat-hd">
+    <span class="chat-hd-icon" id="chatBotIcon">🤖</span>
+    <span class="chat-hd-name" id="chatBotName">AI 小幫手</span>
+    <button class="chat-close" id="chatClose">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-img-preview" id="chatImgPreview" style="display:none;">
+    <img id="chatImgThumb" src="" alt="預覽">
+    <button class="chat-img-remove" id="chatImgRemove">✕</button>
+  </div>
+  <div class="chat-footer">
+    <button class="chat-upload-btn" id="chatUploadBtn" title="上傳圖片">📎</button>
+    <input type="file" id="chatFileInput" accept="image/*" style="display:none;">
+    <textarea class="chat-input" id="chatInput" placeholder="輸入您的問題..." rows="1"></textarea>
+    <button class="chat-send-btn" id="chatSendBtn">&#10148;</button>
+  </div>
+</div>
+
+<script>
+// Click to open/close dropdowns (matching original site behaviour)
+document.querySelectorAll('.nav-li').forEach(function(li){
+  var item = li.querySelector('.nav-item');
+  if(!item) return;
+  item.addEventListener('click', function(e){
+    e.preventDefault();
+    var isOpen = li.classList.contains('open');
+    // close all
+    document.querySelectorAll('.nav-li.open').forEach(function(el){ el.classList.remove('open'); });
+    if(!isOpen) li.classList.add('open');
+  });
+});
+// click outside to close
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.nav-li')){
+    document.querySelectorAll('.nav-li.open').forEach(function(el){ el.classList.remove('open'); });
+  }
+});
+
+// ─── AI ASSISTANT ───
+var DEFAULT_BOTS = [
+  {id:'bot-001',name:'工藝材料助手',icon:'🏺',description:'詢問各類工藝材料、工具使用方式及技法',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-002',name:'技法教學助手',icon:'🖌️',description:'學習傳統工藝技法步驟與製作方式',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-003',name:'作品鑑賞助手',icon:'🔍',description:'上傳圖片進行工藝品鑑賞與分析',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-004',name:'活動查詢助手',icon:'📅',description:'查詢展覽、活動與課程相關資訊',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'}
+];
+
+function getBots(){
+  try{ var s=localStorage.getItem('ntcri_ai_bots'); return s?JSON.parse(s):null; }catch(e){return null;}
+}
+function getActiveBots(){
+  var bots=getBots()||DEFAULT_BOTS;
+  return bots.filter(function(b){return b.active;});
+}
+
+var currentBot=null, chatHistory=[], pendingImageBase64='';
+
+function escForJSON(s){
+  return s.replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'\\r').replace(/\t/g,'\\t');
+}
+function getNestedVal(obj,path){
+  return path.split('.').reduce(function(o,k){return o!=null?o[k]:undefined;},obj);
+}
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function callBotAPI(bot,message,imageBase64){
+  var tpl=bot.requestTemplate||'{"contents":[{"parts":[{"text":"{{message}}"}]}]}';
+  var body=tpl.replace('{{message}}',escForJSON(message))
+              .replace('{{image_base64}}',imageBase64||'')
+              .replace('{{history_json}}',JSON.stringify(chatHistory));
+  var headers={'Content-Type':'application/json'};
+  if(bot.apiToken) headers['Authorization']=bot.apiToken;
+  if(bot.customHeaders){try{Object.assign(headers,JSON.parse(bot.customHeaders));}catch(e){}}
+  var res=await fetch(bot.apiUrl,{method:'POST',headers:headers,body:body});
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  var data=await res.json();
+  var text=getNestedVal(data,bot.responseField);
+  if(text==null) throw new Error('無法解析回應（欄位：'+bot.responseField+'）');
+  return String(text);
+}
+
+// Bot Select Modal
+document.getElementById('aiNavBtn').addEventListener('click',function(){
+  var bots=getActiveBots();
+  var grid=document.getElementById('botGrid');
+  grid.innerHTML='';
+  if(bots.length===0){
+    grid.style.cssText='display:block;';
+    grid.innerHTML='<div class="bot-empty">尚未設定任何機器人，請聯絡管理員</div>';
+  } else {
+    grid.style.cssText='display:grid;';
+    bots.forEach(function(bot){
+      var card=document.createElement('div');
+      card.className='bot-card';
+      card.innerHTML='<div class="bot-card-icon">'+bot.icon+'</div><div class="bot-card-name">'+escHtml(bot.name)+'</div><div class="bot-card-desc">'+escHtml(bot.description)+'</div>';
+      card.addEventListener('click',function(){openChat(bot);});
+      grid.appendChild(card);
+    });
+  }
+  document.getElementById('botSelectOverlay').classList.add('show');
+});
+document.getElementById('botSelectClose').addEventListener('click',function(){
+  document.getElementById('botSelectOverlay').classList.remove('show');
+});
+document.getElementById('botSelectOverlay').addEventListener('click',function(e){
+  if(e.target===this) this.classList.remove('show');
+});
+
+// Chat
+function openChat(bot){
+  document.getElementById('botSelectOverlay').classList.remove('show');
+  currentBot=bot; chatHistory=[];
+  document.getElementById('chatBotIcon').textContent=bot.icon;
+  document.getElementById('chatBotName').textContent=bot.name;
+  document.getElementById('chatMessages').innerHTML='';
+  document.getElementById('chatInput').value='';
+  clearImgPreview();
+  document.getElementById('chatModal').classList.add('show');
+  addBotMsg('您好！我是「'+bot.name+'」，'+(bot.description||'')+'。請問有什麼我可以幫您的？',true);
+}
+document.getElementById('chatClose').addEventListener('click',function(){
+  document.getElementById('chatModal').classList.remove('show');
+  currentBot=null; chatHistory=[]; clearImgPreview();
+});
+
+function addUserMsg(text,imgSrc){
+  var msgs=document.getElementById('chatMessages');
+  var d=document.createElement('div'); d.className='chat-msg user';
+  var c='';
+  if(imgSrc) c+='<img src="'+imgSrc+'" style="max-width:160px;border-radius:8px;margin-bottom:4px;display:block;">';
+  if(text) c+=escHtml(text);
+  d.innerHTML='<div class="chat-bubble">'+c+'</div>';
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+function saveFeedback(rating, question, answer){
+  var payload={
+    ts: new Date().toISOString(),
+    botId: currentBot?currentBot.id:'',
+    botName: currentBot?currentBot.name:'',
+    question: question||'',
+    answer: answer||'',
+    rating: rating
+  };
+  var gasUrl=localStorage.getItem('ntcri_gas_url');
+  if(gasUrl){
+    // ── Google Sheets via Apps Script ──
+    fetch(gasUrl,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(function(e){ console.error('[feedback] GAS 寫入失敗',e); });
+  } else {
+    // ── 本機 localStorage（備援）──
+    try{
+      var list=JSON.parse(localStorage.getItem('ntcri_ai_feedback')||'[]');
+      list.push(payload);
+      localStorage.setItem('ntcri_ai_feedback',JSON.stringify(list));
+      console.log('[feedback] 已儲存至 localStorage，目前共',list.length,'筆',payload);
+    }catch(e){
+      console.error('[feedback] localStorage 寫入失敗',e);
+    }
+  }
+}
+function addBotMsg(text,noFeedback,userQuestion){
+  var msgs=document.getElementById('chatMessages');
+  var d=document.createElement('div'); d.className='chat-msg bot';
+  var feedback=noFeedback?'':'<div class="chat-feedback"><button class="fb-btn like-btn" title="有幫助">👍</button><button class="fb-btn dislike-btn" title="沒幫助">👎</button></div>';
+  d.innerHTML='<div><div class="chat-bubble">'+escHtml(text)+'</div>'+feedback+'</div>';
+  msgs.appendChild(d);
+  if(!noFeedback){
+    var likeBtn=d.querySelector('.like-btn');
+    var dislikeBtn=d.querySelector('.dislike-btn');
+    var rated=false;
+    likeBtn.addEventListener('click',function(){
+      var wasLiked=likeBtn.classList.contains('liked');
+      likeBtn.classList.toggle('liked');
+      dislikeBtn.classList.remove('disliked');
+      if(!wasLiked){ saveFeedback(1, userQuestion, text); rated=true; }
+    });
+    dislikeBtn.addEventListener('click',function(){
+      var wasDisliked=dislikeBtn.classList.contains('disliked');
+      dislikeBtn.classList.toggle('disliked');
+      likeBtn.classList.remove('liked');
+      if(!wasDisliked){ saveFeedback(-1, userQuestion, text); rated=true; }
+    });
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function addTyping(){
+  var msgs=document.getElementById('chatMessages');
+  var d=document.createElement('div'); d.className='chat-msg bot'; d.id='chatTyping';
+  d.innerHTML='<div class="chat-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+function removeTyping(){ var el=document.getElementById('chatTyping'); if(el) el.remove(); }
+
+async function sendMsg(){
+  if(!currentBot) return;
+  var input=document.getElementById('chatInput');
+  var text=input.value.trim();
+  var imgB64=pendingImageBase64;
+  var imgSrc=imgB64?'data:image/jpeg;base64,'+imgB64:'';
+  if(!text&&!imgB64) return;
+  if(!currentBot.apiUrl){
+    addBotMsg('⚠️ 此機器人尚未設定 API，請管理員至 admin.html 配置 API 連結。');
+    return;
+  }
+  input.value=''; clearImgPreview();
+  addUserMsg(text,imgSrc);
+  chatHistory.push({role:'user',content:text+(imgB64?' [附圖]':'')});
+  document.getElementById('chatSendBtn').disabled=true;
+  addTyping();
+  try{
+    var reply=await callBotAPI(currentBot,text,imgB64);
+    removeTyping(); addBotMsg(reply,false,text);
+    chatHistory.push({role:'assistant',content:reply});
+  }catch(err){
+    removeTyping(); addBotMsg('⚠️ 錯誤：'+err.message);
+  }finally{
+    document.getElementById('chatSendBtn').disabled=false;
+    document.getElementById('chatMessages').scrollTop=9999;
+  }
+}
+document.getElementById('chatSendBtn').addEventListener('click',sendMsg);
+document.getElementById('chatInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}
+});
+
+// Image Upload
+document.getElementById('chatUploadBtn').addEventListener('click',function(){
+  document.getElementById('chatFileInput').click();
+});
+document.getElementById('chatFileInput').addEventListener('change',function(e){
+  var file=e.target.files[0]; if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var dataUrl=ev.target.result;
+    pendingImageBase64=dataUrl.split(',')[1];
+    document.getElementById('chatImgThumb').src=dataUrl;
+    document.getElementById('chatImgPreview').style.display='flex';
+  };
+  reader.readAsDataURL(file); e.target.value='';
+});
+document.getElementById('chatImgRemove').addEventListener('click',clearImgPreview);
+function clearImgPreview(){
+  pendingImageBase64='';
+  document.getElementById('chatImgThumb').src='';
+  document.getElementById('chatImgPreview').style.display='none';
+}
+</script>
+</body>
+</html>

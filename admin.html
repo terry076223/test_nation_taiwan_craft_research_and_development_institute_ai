@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI 小幫手管理後台 — NTCRI</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Microsoft JhengHei","微軟正黑體",Arial,sans-serif;font-size:14px;color:#333;background:#f0f4e8;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+:root{
+  --g1:#618137;--g2:#4e6a28;--g3:#7aa042;
+  --gbg:#eef4e5;--border:#ddd;--red:#c0392b;
+}
+
+/* ─── LOGIN ─── */
+.login-wrap{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  background:#fff;border-radius:12px;padding:40px 36px;
+  width:360px;box-shadow:0 8px 32px rgba(0,0,0,.12);
+  border-top:4px solid var(--g1);
+}
+.login-logo{text-align:center;margin-bottom:24px;}
+.login-logo .icon{font-size:42px;}
+.login-logo h2{font-size:18px;color:var(--g1);font-weight:bold;margin-top:8px;}
+.login-logo p{font-size:12px;color:#888;margin-top:4px;}
+.login-box label{font-size:13px;font-weight:bold;color:#555;display:block;margin-bottom:6px;}
+.login-box input{
+  width:100%;border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .15s;
+}
+.login-box input:focus{border-color:var(--g1);}
+.login-err{color:var(--red);font-size:12px;margin-top:6px;display:none;}
+.btn-primary{
+  width:100%;background:var(--g1);color:#fff;border:none;
+  border-radius:8px;padding:12px;font-size:15px;font-weight:bold;
+  cursor:pointer;margin-top:20px;font-family:inherit;
+  transition:background .15s;
+}
+.btn-primary:hover{background:var(--g2);}
+
+/* ─── LAYOUT ─── */
+.admin-wrap{display:none;}
+.admin-header{
+  background:#fff;border-bottom:3px solid var(--g1);
+  padding:14px 24px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.admin-header .logo{display:flex;align-items:center;gap:10px;}
+.admin-header .logo span{font-size:20px;}
+.admin-header .logo h1{font-size:16px;font-weight:bold;color:var(--g1);}
+.admin-header .hd-right{display:flex;align-items:center;gap:12px;}
+.admin-header a{font-size:13px;color:var(--g1);}
+.logout-btn{
+  background:none;border:1px solid #ccc;border-radius:6px;
+  padding:5px 12px;font-size:13px;cursor:pointer;color:#666;font-family:inherit;
+}
+.logout-btn:hover{background:#f5f5f5;}
+
+.admin-body{max-width:960px;margin:24px auto;padding:0 20px 40px;}
+
+/* ─── SECTION CARD ─── */
+.card-sec{background:#fff;border-radius:10px;padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.card-sec h2{font-size:16px;font-weight:bold;color:var(--g1);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--gbg);display:flex;align-items:center;gap:8px;}
+
+/* ─── BOT TABLE ─── */
+.bot-table{width:100%;border-collapse:collapse;}
+.bot-table th{
+  background:var(--gbg);padding:10px 12px;text-align:left;
+  font-size:12px;font-weight:bold;color:var(--g1);border-bottom:2px solid var(--border);
+}
+.bot-table td{
+  padding:11px 12px;border-bottom:1px solid #f0f0f0;
+  font-size:13px;vertical-align:middle;
+}
+.bot-table tr:last-child td{border-bottom:none;}
+.bot-table tr:hover td{background:#fafff5;}
+.bot-icon-cell{font-size:22px;text-align:center;}
+.bot-name{font-weight:bold;color:#222;}
+.bot-desc{font-size:12px;color:#888;margin-top:2px;}
+.bot-url{font-size:11px;color:#aaa;font-family:monospace;}
+.toggle-btn{
+  background:none;border:2px solid #ddd;border-radius:20px;
+  padding:3px 12px;font-size:12px;cursor:pointer;font-family:inherit;
+  transition:all .15s;white-space:nowrap;
+}
+.toggle-btn.on{background:var(--g1);border-color:var(--g1);color:#fff;}
+.toggle-btn.off{color:#aaa;}
+.action-btns{display:flex;gap:6px;}
+.edit-btn,.del-btn{
+  border:none;border-radius:5px;padding:5px 12px;
+  font-size:12px;cursor:pointer;font-family:inherit;
+}
+.edit-btn{background:var(--gbg);color:var(--g1);}
+.edit-btn:hover{background:#dbecc4;}
+.del-btn{background:#fdecea;color:var(--red);}
+.del-btn:hover{background:#f5c6c2;}
+.add-btn{
+  background:var(--g1);color:#fff;border:none;border-radius:8px;
+  padding:9px 18px;font-size:13px;font-weight:bold;cursor:pointer;
+  font-family:inherit;margin-top:14px;
+}
+.add-btn:hover{background:var(--g2);}
+.empty-row td{text-align:center;color:#aaa;padding:28px;}
+
+/* ─── FORM MODAL ─── */
+.form-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:500;align-items:center;justify-content:center;
+}
+.form-overlay.show{display:flex;}
+.form-panel{
+  background:#fff;border-radius:12px;width:620px;max-width:96vw;
+  max-height:92vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.2);
+}
+.form-hd{
+  padding:18px 24px;border-bottom:1px solid #eee;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:#fff;z-index:1;
+}
+.form-hd h3{font-size:16px;font-weight:bold;color:var(--g1);}
+.form-close{background:none;border:none;font-size:20px;color:#999;cursor:pointer;}
+.form-body{padding:20px 24px;}
+.form-group{margin-bottom:16px;}
+.form-group label{font-size:12px;font-weight:bold;color:#555;display:block;margin-bottom:5px;}
+.form-group label .req{color:var(--red);}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;border:1px solid var(--border);border-radius:6px;
+  padding:9px 12px;font-size:13px;font-family:inherit;outline:none;
+  transition:border-color .15s;
+}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--g1);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-hint{font-size:11px;color:#aaa;margin-top:4px;line-height:1.5;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-footer{
+  padding:14px 24px;border-top:1px solid #eee;
+  display:flex;gap:10px;justify-content:flex-end;
+  position:sticky;bottom:0;background:#fff;z-index:1;
+}
+.btn-cancel{
+  background:#f5f5f5;border:none;border-radius:6px;padding:9px 18px;
+  font-size:13px;cursor:pointer;font-family:inherit;
+}
+.btn-cancel:hover{background:#e8e8e8;}
+.btn-save{
+  background:var(--g1);color:#fff;border:none;border-radius:6px;
+  padding:9px 22px;font-size:13px;font-weight:bold;cursor:pointer;font-family:inherit;
+}
+.btn-save:hover{background:var(--g2);}
+.btn-test{
+  background:#1a6baa;color:#fff;border:none;border-radius:6px;
+  padding:9px 16px;font-size:13px;cursor:pointer;font-family:inherit;
+}
+.btn-test:hover{background:#14548a;}
+.test-result{
+  margin-top:10px;padding:10px 12px;border-radius:6px;
+  font-size:12px;font-family:monospace;word-break:break-all;
+  display:none;max-height:120px;overflow-y:auto;
+}
+.test-result.ok{background:#f0f9e8;color:#2d6b00;border:1px solid #b8dfa0;}
+.test-result.err{background:#fdecea;color:var(--red);border:1px solid #f5c6c2;}
+
+/* ─── PASSWORD SECTION ─── */
+.pwd-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;}
+.pwd-form label{font-size:12px;font-weight:bold;color:#555;display:block;margin-bottom:5px;}
+.pwd-form input{
+  border:1px solid var(--border);border-radius:6px;
+  padding:9px 12px;font-size:13px;font-family:inherit;outline:none;width:100%;
+}
+.pwd-form input:focus{border-color:var(--g1);}
+.pwd-msg{font-size:12px;margin-top:8px;display:none;}
+.pwd-msg.ok{color:var(--g1);}
+.pwd-msg.err{color:var(--red);}
+
+/* ─── INLINE TOGGLE ─── */
+.switch-row{display:flex;align-items:center;gap:10px;}
+.switch{position:relative;display:inline-block;width:44px;height:24px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{
+  position:absolute;inset:0;background:#ccc;border-radius:24px;
+  cursor:pointer;transition:.2s;
+}
+.slider:before{
+  content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;
+  background:#fff;border-radius:50%;transition:.2s;
+}
+.switch input:checked+.slider{background:var(--g1);}
+.switch input:checked+.slider:before{transform:translateX(20px);}
+
+/* ─── NOTICE BOX ─── */
+.notice{
+  background:#fffbe6;border:1px solid #ffe082;border-radius:8px;
+  padding:12px 16px;font-size:12px;color:#7a5c00;line-height:1.7;margin-bottom:16px;
+}
+.notice strong{font-weight:bold;}
+/* ─── GAS CODE BLOCK ─── */
+.gas-code{
+  background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:8px;
+  font-size:12px;overflow-x:auto;line-height:1.7;white-space:pre;
+  font-family:"Courier New",monospace;
+}
+.storage-status-bar{
+  font-size:12px;padding:7px 12px;border-radius:6px;margin-bottom:12px;
+  display:none;
+}
+.storage-status-bar.sheets{background:#eef4e5;color:var(--g1);border:1px solid #b8dfa0;}
+.storage-status-bar.local{background:#fffbe6;color:#7a5c00;border:1px solid #ffe082;}
+/* ─── STATS CARDS ─── */
+.stat-card{
+  background:var(--gbg);border-radius:10px;padding:16px;text-align:center;
+}
+.stat-card .stat-num{font-size:28px;font-weight:bold;color:var(--g1);}
+.stat-card .stat-num.red{color:var(--red);}
+.stat-card .stat-label{font-size:12px;color:#777;margin-top:4px;}
+.rating-like{color:#618137;font-size:16px;}
+.rating-dislike{color:#c0392b;font-size:16px;}
+.fb-empty{text-align:center;color:#aaa;padding:28px;}
+.text-truncate{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;cursor:help;}
+</style>
+</head>
+<body>
+
+<!-- ████ LOGIN ████ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="icon">🤖</div>
+      <h2>AI 小幫手管理後台</h2>
+      <p>國立臺灣工藝研究發展中心</p>
+    </div>
+    <label for="loginPwd">管理員密碼</label>
+    <input type="password" id="loginPwd" placeholder="請輸入密碼" autocomplete="current-password"/>
+    <div class="login-err" id="loginErr">密碼錯誤，請再試一次</div>
+    <button class="btn-primary" id="loginBtn">登入</button>
+  </div>
+</div>
+
+<!-- ████ ADMIN PANEL ████ -->
+<div class="admin-wrap" id="adminWrap">
+
+  <div class="admin-header">
+    <div class="logo">
+      <span>🤖</span>
+      <h1>AI 小幫手管理後台</h1>
+    </div>
+    <div class="hd-right">
+      <a href="index.html" target="_blank">← 回到官網</a>
+      <button class="logout-btn" id="logoutBtn">登出</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+
+    <!-- 說明 -->
+    <div class="notice">
+      <strong>設定說明</strong><br>
+      每個機器人需填入 <strong>API URL</strong>（含 API Key，如 Gemini 格式：<code>...?key=YOUR_KEY</code>）、
+      <strong>Request 模板</strong>（含 <code>{{message}}</code> 佔位符）、
+      <strong>Response 欄位路徑</strong>（如 <code>candidates.0.content.parts.0.text</code>）。<br>
+      完成後可按「測試連線」確認 API 可正常使用。
+    </div>
+
+    <!-- BOT 清單 -->
+    <div class="card-sec">
+      <h2>🤖 機器人管理</h2>
+      <table class="bot-table" id="botTable">
+        <thead>
+          <tr>
+            <th style="width:50px;">圖示</th>
+            <th>名稱 / 說明</th>
+            <th>API URL</th>
+            <th style="width:80px;">啟用</th>
+            <th style="width:120px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="botTableBody"></tbody>
+      </table>
+      <button class="add-btn" id="addBotBtn">+ 新增機器人</button>
+    </div>
+
+    <!-- 資料儲存設定 -->
+    <div class="card-sec">
+      <h2>⚙️ 資料儲存設定</h2>
+      <div id="storageStatusBar" class="storage-status-bar"></div>
+      <div class="notice">
+        設定後所有使用者的 👍/👎 回饋會直接寫入 Google 試算表，管理員可在任何裝置查看。<br>
+        <strong>留空</strong>則使用本機 localStorage（資料僅存在當前瀏覽器，其他使用者的回饋看不到）。
+      </div>
+      <details style="margin-bottom:16px;">
+        <summary style="cursor:pointer;font-weight:bold;color:var(--g1);font-size:13px;padding:6px 0;">▶ 展開 Google Apps Script 程式碼（複製後貼入 GAS 編輯器）</summary>
+        <div style="margin-top:10px;">
+          <div style="font-size:12px;color:#666;margin-bottom:6px;">步驟：前往 script.google.com → 新增專案 → 貼上以下程式碼 → 部署為 Web App（執行身分：我、存取權限：所有人）→ 複製部署網址</div>
+          <pre class="gas-code">function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('回饋記錄') || ss.getActiveSheet();
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['時間', '機器人', '使用者問題', 'AI回覆', '評分']);
+  }
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss'),
+    data.botName || '',
+    data.question || '',
+    data.answer || '',
+    data.rating === 1 ? '👍 滿意' : '👎 不滿意'
+  ]);
+  return ContentService
+    .createTextOutput(JSON.stringify({status:'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('回饋記錄') || ss.getActiveSheet();
+  var lastRow = sheet.getLastRow();
+  if (lastRow &lt;= 1) {
+    return ContentService.createTextOutput('[]').setMimeType(ContentService.MimeType.JSON);
+  }
+  var rows = sheet.getRange(2, 1, lastRow - 1, 5).getValues().map(function(r) {
+    return { dateStr: r[0], botName: r[1], question: r[2], answer: r[3],
+             ratingText: r[4], rating: String(r[4]).indexOf('👍') >= 0 ? 1 : -1 };
+  }).reverse();
+  return ContentService
+    .createTextOutput(JSON.stringify(rows))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+        </div>
+      </details>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Google Apps Script 部署網址</label>
+          <input type="text" id="gasUrlInput" placeholder="https://script.google.com/macros/s/xxxxx/exec"/>
+          <div class="form-hint">貼上部署網址後按「儲存」，之後所有回饋都會寫入 Google Sheets</div>
+        </div>
+        <button class="btn-save" id="saveGasBtn" style="height:38px;">儲存</button>
+      </div>
+      <div class="pwd-msg" id="gasSaveMsg"></div>
+    </div>
+
+    <!-- 滿意度回報 -->
+    <div class="card-sec">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <h2 style="margin:0;">📊 使用者滿意度回報</h2>
+        <button class="edit-btn" id="refreshFeedbackBtn" style="padding:5px 14px;font-size:13px;">🔄 重新整理</button>
+      </div>
+      <div id="feedbackDebug" style="font-size:11px;color:#999;margin-bottom:10px;"></div>
+      <div id="feedbackStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;"></div>
+      <table class="bot-table" id="feedbackTable">
+        <thead>
+          <tr>
+            <th style="width:140px;">時間</th>
+            <th style="width:100px;">機器人</th>
+            <th>使用者問題</th>
+            <th>AI 回覆</th>
+            <th style="width:70px;">評分</th>
+          </tr>
+        </thead>
+        <tbody id="feedbackBody"></tbody>
+      </table>
+      <div style="margin-top:14px;display:flex;gap:10px;">
+        <button class="edit-btn" id="exportCsvBtn" style="padding:7px 16px;font-size:13px;">⬇ 匯出 CSV</button>
+        <button class="del-btn" id="clearFeedbackBtn" style="padding:7px 16px;font-size:13px;">🗑 清除所有回報</button>
+      </div>
+    </div>
+
+    <!-- 密碼變更 -->
+    <div class="card-sec">
+      <h2>🔒 變更管理員密碼</h2>
+      <div class="pwd-form">
+        <div>
+          <label>目前密碼</label>
+          <input type="password" id="pwdOld" placeholder="舊密碼"/>
+        </div>
+        <div>
+          <label>新密碼</label>
+          <input type="password" id="pwdNew" placeholder="新密碼（至少 6 字元）"/>
+        </div>
+        <div>
+          <label>確認新密碼</label>
+          <input type="password" id="pwdConfirm" placeholder="再次輸入新密碼"/>
+        </div>
+        <div>
+          <button class="btn-primary" style="margin-top:0;width:auto;padding:9px 18px;" id="pwdSaveBtn">更新</button>
+        </div>
+      </div>
+      <div class="pwd-msg" id="pwdMsg"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ████ BOT FORM MODAL ████ -->
+<div class="form-overlay" id="botFormOverlay">
+  <div class="form-panel">
+    <div class="form-hd">
+      <h3 id="formTitle">新增機器人</h3>
+      <button class="form-close" id="formClose">✕</button>
+    </div>
+    <div class="form-body">
+      <input type="hidden" id="fId"/>
+      <div class="form-row">
+        <div class="form-group">
+          <label>名稱 <span class="req">*</span></label>
+          <input type="text" id="fName" placeholder="例：工藝材料助手"/>
+        </div>
+        <div class="form-group">
+          <label>圖示（Emoji）</label>
+          <input type="text" id="fIcon" placeholder="例：🏺" maxlength="4"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>說明</label>
+        <input type="text" id="fDesc" placeholder="機器人功能描述（顯示在選單卡片上）"/>
+      </div>
+      <div class="form-group">
+        <label>啟用</label>
+        <div class="switch-row">
+          <label class="switch">
+            <input type="checkbox" id="fActive" checked/>
+            <span class="slider"></span>
+          </label>
+          <span style="font-size:13px;color:#666;">啟用後顯示在官網 AI 小幫手選單</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>API URL <span class="req">*</span></label>
+        <input type="text" id="fApiUrl" placeholder="例：https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY"/>
+        <div class="form-hint">Gemini：Key 直接放在 URL 末端（?key=xxx），Token 欄位留空。<br>Ollama：http://localhost:11434/api/chat</div>
+      </div>
+      <div class="form-group">
+        <label>API Token（Authorization Header）</label>
+        <input type="password" id="fToken" placeholder="例：Bearer sk-xxx（Gemini 不需要填此欄）"/>
+        <div class="form-hint">填入後將自動加入 <code>Authorization</code> 標頭。Gemini API 不需要填。</div>
+      </div>
+      <div class="form-group">
+        <label>自訂 Headers（JSON 格式，選填）</label>
+        <textarea id="fHeaders" placeholder='例：{"X-Custom-Key": "value"}'></textarea>
+      </div>
+      <div class="form-group">
+        <label>Request Body 模板 <span class="req">*</span></label>
+        <textarea id="fTemplate" rows="4" placeholder='{"contents":[{"parts":[{"text":"{{message}}"}]}]}'></textarea>
+        <div class="form-hint">
+          佔位符說明：<code>{{message}}</code> 使用者文字　<code>{{image_base64}}</code> 圖片 Base64　<code>{{history_json}}</code> 對話歷史<br>
+          Gemini 範例：<code>{"contents":[{"parts":[{"text":"{{message}}"}]}]}</code><br>
+          Ollama 範例：<code>{"model":"llama3","messages":[{"role":"user","content":"{{message}}"}]}</code>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Response 欄位路徑 <span class="req">*</span></label>
+        <input type="text" id="fResponseField" placeholder="例：candidates.0.content.parts.0.text"/>
+        <div class="form-hint">
+          Gemini：<code>candidates.0.content.parts.0.text</code><br>
+          Ollama chat：<code>message.content</code><br>
+          OpenRouter / OpenAI：<code>choices.0.message.content</code>
+        </div>
+      </div>
+      <div class="form-group">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button class="btn-test" id="testBtn">測試連線</button>
+          <span style="font-size:12px;color:#aaa;">送出「你好，請自我介紹」並顯示 API 原始回應</span>
+        </div>
+        <div class="test-result" id="testResult"></div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn-cancel" id="formCancelBtn">取消</button>
+      <button class="btn-save" id="formSaveBtn">儲存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var DEFAULT_PWD = 'ntcri2025';
+var DEFAULT_BOTS = [
+  {id:'bot-001',name:'工藝材料助手',icon:'🏺',description:'詢問各類工藝材料、工具使用方式及技法',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-002',name:'技法教學助手',icon:'🖌️',description:'學習傳統工藝技法步驟與製作方式',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-003',name:'作品鑑賞助手',icon:'🔍',description:'上傳圖片進行工藝品鑑賞與分析',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'},
+  {id:'bot-004',name:'活動查詢助手',icon:'📅',description:'查詢展覽、活動與課程相關資訊',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'}
+];
+
+function getPwd(){ return localStorage.getItem('ntcri_admin_pwd')||DEFAULT_PWD; }
+function getBots(){
+  try{ var s=localStorage.getItem('ntcri_ai_bots'); return s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_BOTS)); }
+  catch(e){ return JSON.parse(JSON.stringify(DEFAULT_BOTS)); }
+}
+function saveBots(bots){ localStorage.setItem('ntcri_ai_bots',JSON.stringify(bots)); }
+function eid(id){ return document.getElementById(id); }
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── LOGIN ───
+eid('loginPwd').addEventListener('keydown',function(e){ if(e.key==='Enter') login(); });
+eid('loginBtn').addEventListener('click',login);
+function login(){
+  var v=eid('loginPwd').value;
+  if(v===getPwd()){
+    eid('loginWrap').style.display='none';
+    eid('adminWrap').style.display='block';
+    eid('gasUrlInput').value=getGasUrl();
+    updateStorageStatusBar();
+    renderBots();
+    renderFeedback();
+  } else {
+    eid('loginErr').style.display='block';
+    eid('loginPwd').focus();
+  }
+}
+eid('logoutBtn').addEventListener('click',function(){
+  eid('adminWrap').style.display='none';
+  eid('loginWrap').style.display='flex';
+  eid('loginPwd').value='';
+  eid('loginErr').style.display='none';
+});
+
+// ─── BOT TABLE ───
+function renderBots(){
+  var bots=getBots();
+  var tbody=eid('botTableBody');
+  tbody.innerHTML='';
+  if(!bots.length){
+    tbody.innerHTML='<tr class="empty-row"><td colspan="5">尚未設定任何機器人</td></tr>';
+    return;
+  }
+  bots.forEach(function(bot,i){
+    var tr=document.createElement('tr');
+    var urlShow=bot.apiUrl?('<span class="bot-url">'+escHtml(bot.apiUrl.length>40?bot.apiUrl.substring(0,40)+'…':bot.apiUrl)+'</span>'):'<span style="color:#ccc;font-size:11px;">未設定</span>';
+    tr.innerHTML=
+      '<td class="bot-icon-cell">'+escHtml(bot.icon||'🤖')+'</td>'+
+      '<td><div class="bot-name">'+escHtml(bot.name)+'</div><div class="bot-desc">'+escHtml(bot.description)+'</div></td>'+
+      '<td>'+urlShow+'</td>'+
+      '<td><button class="toggle-btn '+(bot.active?'on':'off')+'" data-i="'+i+'">'+(bot.active?'啟用':'停用')+'</button></td>'+
+      '<td><div class="action-btns"><button class="edit-btn" data-i="'+i+'">編輯</button><button class="del-btn" data-i="'+i+'">刪除</button></div></td>';
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll('.toggle-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var bots=getBots(); var i=parseInt(this.dataset.i);
+      bots[i].active=!bots[i].active; saveBots(bots); renderBots();
+    });
+  });
+  tbody.querySelectorAll('.edit-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){ openForm(getBots()[parseInt(this.dataset.i)]); });
+  });
+  tbody.querySelectorAll('.del-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var bots=getBots(); var i=parseInt(this.dataset.i);
+      if(!confirm('確定要刪除「'+bots[i].name+'」嗎？')) return;
+      bots.splice(i,1); saveBots(bots); renderBots();
+    });
+  });
+}
+
+// ─── BOT FORM MODAL ───
+eid('addBotBtn').addEventListener('click',function(){ openForm(null); });
+eid('formClose').addEventListener('click',closeForm);
+eid('formCancelBtn').addEventListener('click',closeForm);
+eid('botFormOverlay').addEventListener('click',function(e){ if(e.target===this) closeForm(); });
+
+function openForm(bot){
+  eid('formTitle').textContent=bot?'編輯機器人':'新增機器人';
+  eid('fId').value=bot?bot.id:'';
+  eid('fName').value=bot?bot.name:'';
+  eid('fIcon').value=bot?bot.icon:'🤖';
+  eid('fDesc').value=bot?bot.description:'';
+  eid('fActive').checked=bot?bot.active:true;
+  eid('fApiUrl').value=bot?bot.apiUrl:'';
+  eid('fToken').value=bot?bot.apiToken:'';
+  eid('fHeaders').value=bot?bot.customHeaders:'';
+  eid('fTemplate').value=bot?bot.requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}';
+  eid('fResponseField').value=bot?bot.responseField:'candidates.0.content.parts.0.text';
+  eid('testResult').style.display='none';
+  eid('botFormOverlay').classList.add('show');
+  eid('fName').focus();
+}
+function closeForm(){
+  eid('botFormOverlay').classList.remove('show');
+}
+
+eid('formSaveBtn').addEventListener('click',function(){
+  var name=eid('fName').value.trim();
+  var apiUrl=eid('fApiUrl').value.trim();
+  var tpl=eid('fTemplate').value.trim();
+  var rf=eid('fResponseField').value.trim();
+  if(!name){ alert('請填入機器人名稱'); eid('fName').focus(); return; }
+  if(!tpl){ alert('請填入 Request Body 模板'); eid('fTemplate').focus(); return; }
+  if(!rf){ alert('請填入 Response 欄位路徑'); eid('fResponseField').focus(); return; }
+
+  var bots=getBots();
+  var id=eid('fId').value;
+  var botData={
+    id:id||('bot-'+Date.now()),
+    name:name,
+    icon:eid('fIcon').value.trim()||'🤖',
+    description:eid('fDesc').value.trim(),
+    active:eid('fActive').checked,
+    apiUrl:apiUrl,
+    apiToken:eid('fToken').value.trim(),
+    customHeaders:eid('fHeaders').value.trim(),
+    requestTemplate:tpl,
+    responseField:rf
+  };
+  if(id){
+    var idx=bots.findIndex(function(b){return b.id===id;});
+    if(idx>=0) bots[idx]=botData; else bots.push(botData);
+  } else {
+    bots.push(botData);
+  }
+  saveBots(bots); renderBots(); closeForm();
+});
+
+// ─── TEST CONNECTION ───
+eid('testBtn').addEventListener('click',async function(){
+  var apiUrl=eid('fApiUrl').value.trim();
+  var token=eid('fToken').value.trim();
+  var headers_str=eid('fHeaders').value.trim();
+  var tpl=eid('fTemplate').value.trim();
+  var rf=eid('fResponseField').value.trim();
+  if(!apiUrl){ alert('請先填入 API URL'); return; }
+  if(!tpl){ alert('請先填入 Request Body 模板'); return; }
+
+  var testMsg='你好，請用繁體中文簡短自我介紹。';
+  var body=tpl.replace('{{message}}',testMsg.replace(/"/g,'\\"')).replace('{{image_base64}}','').replace('{{history_json}}','[]');
+  var headers={'Content-Type':'application/json'};
+  if(token) headers['Authorization']=token;
+  if(headers_str){try{Object.assign(headers,JSON.parse(headers_str));}catch(e){}}
+
+  var res=eid('testResult');
+  res.className='test-result'; res.style.display='block'; res.textContent='⏳ 測試中...';
+  eid('testBtn').disabled=true;
+  try{
+    var r=await fetch(apiUrl,{method:'POST',headers:headers,body:body});
+    var data=await r.json();
+    if(!r.ok) throw new Error('HTTP '+r.status+': '+JSON.stringify(data));
+    var text=rf.split('.').reduce(function(o,k){return o!=null?o[k]:undefined;},data);
+    if(text!=null){
+      res.className='test-result ok';
+      res.textContent='✅ 成功！回應：'+String(text).substring(0,300);
+    } else {
+      res.className='test-result err';
+      res.textContent='⚠️ 欄位路徑「'+rf+'」找不到值。原始回應：\n'+JSON.stringify(data,null,2).substring(0,400);
+    }
+  }catch(err){
+    res.className='test-result err';
+    res.textContent='❌ 錯誤：'+err.message;
+  }finally{
+    eid('testBtn').disabled=false;
+  }
+});
+
+// ─── PASSWORD CHANGE ───
+eid('pwdSaveBtn').addEventListener('click',function(){
+  var old=eid('pwdOld').value;
+  var nw=eid('pwdNew').value;
+  var cf=eid('pwdConfirm').value;
+  var msg=eid('pwdMsg');
+  if(old!==getPwd()){
+    msg.className='pwd-msg err'; msg.style.display='block'; msg.textContent='目前密碼錯誤';
+    return;
+  }
+  if(nw.length<6){
+    msg.className='pwd-msg err'; msg.style.display='block'; msg.textContent='新密碼至少需 6 個字元';
+    return;
+  }
+  if(nw!==cf){
+    msg.className='pwd-msg err'; msg.style.display='block'; msg.textContent='兩次輸入的新密碼不一致';
+    return;
+  }
+  localStorage.setItem('ntcri_admin_pwd',nw);
+  msg.className='pwd-msg ok'; msg.style.display='block'; msg.textContent='✅ 密碼已更新';
+  eid('pwdOld').value=''; eid('pwdNew').value=''; eid('pwdConfirm').value='';
+});
+
+// ─── GAS URL 設定 ───
+function getGasUrl(){ return localStorage.getItem('ntcri_gas_url')||''; }
+function updateStorageStatusBar(){
+  var bar=eid('storageStatusBar');
+  var url=getGasUrl();
+  if(url){
+    bar.className='storage-status-bar sheets';
+    bar.style.display='block';
+    bar.textContent='✅ 目前使用 Google Sheets 儲存（'+url.substring(0,60)+'…）';
+  } else {
+    bar.className='storage-status-bar local';
+    bar.style.display='block';
+    bar.textContent='⚠️ 目前使用本機 localStorage（資料僅存在此瀏覽器，其他使用者回饋無法收集）';
+  }
+}
+eid('gasUrlInput').value=getGasUrl();
+eid('saveGasBtn').addEventListener('click',function(){
+  var url=eid('gasUrlInput').value.trim();
+  localStorage.setItem('ntcri_gas_url',url);
+  var msg=eid('gasSaveMsg');
+  msg.className='pwd-msg ok'; msg.style.display='block';
+  msg.textContent=url?'✅ Google Sheets 網址已儲存，往後回饋將自動寫入 Google Sheets':'✅ 已清除（改用本機 localStorage）';
+  updateStorageStatusBar();
+  renderFeedback();
+});
+
+// ─── FEEDBACK ───
+function getLocalFeedback(){
+  try{ return JSON.parse(localStorage.getItem('ntcri_ai_feedback')||'[]'); }catch(e){return [];}
+}
+function renderFeedbackStats(list){
+  var liked=list.filter(function(f){return f.rating===1;}).length;
+  var disliked=list.filter(function(f){return f.rating===-1;}).length;
+  var rate=list.length?Math.round(liked/list.length*100):0;
+  eid('feedbackStats').innerHTML=
+    '<div class="stat-card"><div class="stat-num">'+list.length+'</div><div class="stat-label">總評分次數</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+liked+' 👍</div><div class="stat-label">滿意</div></div>'+
+    '<div class="stat-card"><div class="stat-num red">'+disliked+' 👎</div><div class="stat-label">不滿意</div></div>'+
+    '<div class="stat-card"><div class="stat-num">'+(list.length?rate+'%':'—')+'</div><div class="stat-label">滿意度</div></div>';
+}
+function renderFeedbackRows(list){
+  var tbody=eid('feedbackBody');
+  tbody.innerHTML='';
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="5" class="fb-empty">尚無任何評分記錄</td></tr>';
+    return;
+  }
+  list.forEach(function(f){
+    var dateStr=f.dateStr||'';
+    if(!dateStr&&f.ts){
+      var dt=new Date(f.ts);
+      dateStr=dt.getFullYear()+'/'+(dt.getMonth()+1).toString().padStart(2,'0')+'/'+dt.getDate().toString().padStart(2,'0')+' '+dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0');
+    }
+    var ratingVal=f.rating||(f.ratingText&&f.ratingText.indexOf('👍')>=0?1:-1);
+    var tr=document.createElement('tr');
+    tr.innerHTML=
+      '<td style="font-size:11px;color:#888;">'+escHtml(String(dateStr))+'</td>'+
+      '<td><span style="font-size:12px;">'+escHtml(f.botName||'')+'</span></td>'+
+      '<td><span class="text-truncate" title="'+escHtml(f.question||'')+'">'+escHtml(f.question||'')+'</span></td>'+
+      '<td><span class="text-truncate" title="'+escHtml(f.answer||'')+'">'+escHtml(f.answer||'')+'</span></td>'+
+      '<td style="text-align:center;">'+(ratingVal===1?'<span class="rating-like">👍</span>':'<span class="rating-dislike">👎</span>')+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+async function renderFeedback(){
+  var gasUrl=getGasUrl();
+  var dbg=eid('feedbackDebug');
+  if(gasUrl){
+    // ── Google Sheets 模式 ──
+    eid('feedbackBody').innerHTML='<tr><td colspan="5" class="fb-empty">⏳ 從 Google Sheets 載入中…</td></tr>';
+    eid('feedbackStats').innerHTML='';
+    if(dbg) dbg.textContent='資料來源：Google Sheets';
+    try{
+      var res=await fetch(gasUrl);
+      var list=await res.json();
+      renderFeedbackStats(list);
+      renderFeedbackRows(list);
+      if(dbg) dbg.textContent='資料來源：Google Sheets，共 '+list.length+' 筆';
+    }catch(err){
+      eid('feedbackBody').innerHTML='<tr><td colspan="5" class="fb-empty" style="color:var(--red);">❌ 無法讀取 Google Sheets：'+err.message+'<br><small>請確認 GAS 已部署、且存取權限設為「所有人」</small></td></tr>';
+    }
+  } else {
+    // ── localStorage 模式 ──
+    var raw=localStorage.getItem('ntcri_ai_feedback');
+    var list=[];
+    try{ list=raw?JSON.parse(raw):[]; }catch(e){ list=[]; }
+    if(dbg) dbg.textContent='資料來源：本機 localStorage（ntcri_ai_feedback），共 '+list.length+' 筆，raw 長度：'+(raw?raw.length:0);
+    renderFeedbackStats(list);
+    renderFeedbackRows(list);
+  }
+}
+eid('refreshFeedbackBtn').addEventListener('click',function(){ renderFeedback(); });
+
+// Export CSV（支援兩種來源）
+eid('exportCsvBtn').addEventListener('click',async function(){
+  var gasUrl=getGasUrl();
+  var list=[];
+  if(gasUrl){
+    try{ var r=await fetch(gasUrl); list=await r.json(); }catch(e){ alert('無法從 Google Sheets 取得資料'); return; }
+  } else {
+    list=getLocalFeedback();
+  }
+  if(!list.length){ alert('尚無評分記錄可匯出'); return; }
+  var rows=[['時間','機器人','使用者問題','AI回覆','評分']];
+  list.forEach(function(f){
+    var ratingVal=f.rating||(f.ratingText&&f.ratingText.indexOf('👍')>=0?1:-1);
+    rows.push([f.dateStr||new Date(f.ts||'').toLocaleString('zh-TW'),f.botName||'',f.question||'',f.answer||'',ratingVal===1?'👍 滿意':'👎 不滿意']);
+  });
+  var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='AI小幫手滿意度_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+});
+
+eid('clearFeedbackBtn').addEventListener('click',function(){
+  if(!confirm('確定要清除所有本機 localStorage 的滿意度記錄嗎？\n（Google Sheets 的資料需至試算表手動刪除）')) return;
+  localStorage.removeItem('ntcri_ai_feedback');
+  renderFeedback();
+});
+
+/* ════════════════════════════════════════════════════════════
+   【MARK】PostgreSQL 資料庫整合方案（尚未啟用，待日後部署後端時使用）
+   ────────────────────────────────────────────────────────────
+
+   【SQL Schema】
+   CREATE TABLE ai_feedback (
+     id          SERIAL PRIMARY KEY,
+     created_at  TIMESTAMPTZ DEFAULT NOW(),
+     bot_id      VARCHAR(50),
+     bot_name    VARCHAR(100),
+     question    TEXT,
+     answer      TEXT,
+     rating      SMALLINT CHECK (rating IN (1, -1))
+   );
+
+   【後端 API (Node.js + Express + pg 範例)】
+
+   const { Pool } = require('pg');
+   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+   // 寫入回饋
+   app.post('/api/feedback', async (req, res) => {
+     const { botId, botName, question, answer, rating } = req.body;
+     await pool.query(
+       'INSERT INTO ai_feedback (bot_id,bot_name,question,answer,rating) VALUES ($1,$2,$3,$4,$5)',
+       [botId, botName, question, answer, rating]
+     );
+     res.json({ status: 'ok' });
+   });
+
+   // 讀取回饋（需 token 驗證）
+   app.get('/api/feedback', verifyToken, async (req, res) => {
+     const result = await pool.query(
+       'SELECT * FROM ai_feedback ORDER BY created_at DESC'
+     );
+     res.json(result.rows);
+   });
+
+   【index.html saveFeedback 改法（替換 GAS fetch 部分）】
+   var pgUrl = localStorage.getItem('ntcri_pg_url');   // 後端網址
+   var pgToken = localStorage.getItem('ntcri_pg_token'); // 存取 Token
+   fetch(pgUrl + '/api/feedback', {
+     method: 'POST',
+     headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+pgToken },
+     body: JSON.stringify(payload)
+   });
+
+   【admin.html renderFeedback 讀取改法（替換 fetch 部分）】
+   var res = await fetch(pgUrl + '/api/feedback', {
+     headers: { 'Authorization': 'Bearer ' + pgToken }
+   });
+   var list = await res.json();
+
+   【admin.html 需新增欄位（資料儲存設定區塊）】
+   - 後端 API 網址：localStorage key 'ntcri_pg_url'
+   - 存取 Token：localStorage key 'ntcri_pg_token'
+   ════════════════════════════════════════════════════════════ */
+</script>
+</body>
+</html>
