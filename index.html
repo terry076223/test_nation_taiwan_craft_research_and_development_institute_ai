@@ -1522,12 +1522,21 @@ var DEFAULT_BOTS = [
   {id:'bot-004',name:'活動查詢助手',icon:'📅',description:'查詢展覽、活動與課程相關資訊',active:true,apiUrl:'',apiToken:'',customHeaders:'',requestTemplate:'{"contents":[{"parts":[{"text":"{{message}}"}]}]}',responseField:'candidates.0.content.parts.0.text'}
 ];
 
-function getBots(){
-  try{ var s=localStorage.getItem('ntcri_ai_bots'); return s?JSON.parse(s):null; }catch(e){return null;}
-}
-function getActiveBots(){
-  var bots=getBots()||DEFAULT_BOTS;
-  return bots.filter(function(b){return b.active;});
+// Bot 設定讀取（優先順序：bots-config.json → localStorage → DEFAULT_BOTS）
+async function getBotsConfig(){
+  try{
+    var res=await fetch('bots-config.json');
+    if(res.ok){
+      var cfg=await res.json();
+      var list=cfg.bots||cfg; // 支援新格式 {bots:[...]} 和舊格式 [...]
+      if(Array.isArray(list)&&list.length) return list;
+    }
+  }catch(e){}
+  try{
+    var s=localStorage.getItem('ntcri_ai_bots');
+    if(s){ var d=JSON.parse(s); if(Array.isArray(d)&&d.length) return d; }
+  }catch(e){}
+  return DEFAULT_BOTS;
 }
 
 var currentBot=null, chatHistory=[], pendingImageBase64='';
@@ -1559,8 +1568,9 @@ async function callBotAPI(bot,message,imageBase64){
 }
 
 // Bot Select Modal
-document.getElementById('aiNavBtn').addEventListener('click',function(){
-  var bots=getActiveBots();
+document.getElementById('aiNavBtn').addEventListener('click',async function(){
+  var allBots=await getBotsConfig();
+  var bots=allBots.filter(function(b){return b.active;});
   var grid=document.getElementById('botGrid');
   grid.innerHTML='';
   if(bots.length===0){
